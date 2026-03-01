@@ -61,6 +61,85 @@ background:rgba(255,255,255,0.15);
 .rank-1{border:1px solid gold}
 .rank-2{border:1px solid silver}
 .rank-3{border:1px solid #CD7F32}
+
+/* ===== MODAL ===== */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.hidden{display:none}
+
+.modal-content{
+background:#fff;
+color:#333;
+padding:25px;
+border-radius:16px;
+width:90%;
+max-width:350px;
+text-align:center;
+animation:fadeIn .2s ease;
+}
+
+@keyframes fadeIn{
+from{transform:scale(.9);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+.quick-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin:15px 0;
+}
+
+.quick-buttons button{
+padding:10px;
+border:none;
+border-radius:8px;
+background:#008ecc;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.quick-buttons button:hover{
+opacity:.8;
+}
+
+.modal-content input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+margin-top:10px;
+}
+
+.modal-actions{
+margin-top:15px;
+display:flex;
+gap:10px;
+}
+
+.modal-actions button{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.confirm{background:#28a745;color:white}
+.cancel{background:#dc3545;color:white}
 </style>
 </head>
 <body>
@@ -75,12 +154,32 @@ background:rgba(255,255,255,0.15);
 
 </div>
 
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+<div class="modal-content">
+<h3 id="modal-nome"></h3>
+
+<div class="quick-buttons">
+<button onclick="setValor(5)">+5</button>
+<button onclick="setValor(10)">+10</button>
+<button onclick="setValor(20)">+20</button>
+<button onclick="setValor(50)">+50</button>
+</div>
+
+<input type="number" id="valorCustom" placeholder="Outro valor">
+
+<div class="modal-actions">
+<button class="confirm" onclick="confirmarPontos()">Confirmar</button>
+<button class="cancel" onclick="fecharModal()">Cancelar</button>
+</div>
+</div>
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ===== CONFIG REAL DO SEU PROJETO ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
   authDomain: "ranking-jovens-d17d6.firebaseapp.com",
@@ -93,14 +192,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-console.log("🔥 Firebase conectado com sucesso");
-
-/* ===== CONFIG ADMIN ===== */
 const SENHA_ADMIN = "admin";
 let modoAdmin = false;
 let tempoPressionado;
+let participanteAtual = null;
 
-/* ===== PARTICIPANTES ===== */
 const participantes = [
 {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},
 {id:3,nome:'Flavia'},{id:4,nome:'Julia'},
@@ -116,7 +212,7 @@ let transacoes = [];
 const rankingDiv = document.getElementById("ranking");
 const titulo = document.getElementById("titulo");
 
-/* ===== ATIVAR ADMIN ===== */
+/* ===== ADMIN ===== */
 titulo.addEventListener("click",()=>{
 if(modoAdmin) return;
 const senha = prompt("Senha admin:");
@@ -127,7 +223,6 @@ alert("Modo Admin Ativado");
 }
 });
 
-/* ===== DESATIVAR ADMIN (segurar 2s) ===== */
 titulo.addEventListener("mousedown",()=>{
 tempoPressionado=setTimeout(()=>{
 modoAdmin=false;
@@ -151,28 +246,47 @@ let cls="";
 if(i==0)cls="rank-1";
 if(i==1)cls="rank-2";
 if(i==2)cls="rank-3";
+
 return `<div class="card ${cls}" onclick="adicionar(${p.id})">
-<span>${i+1}º&nbsp;&nbsp;${p.nome}</span>
+<span>${i+1}º  ${p.nome}</span>
 <strong>${p.pontos}</strong>
 </div>`;
 }).join("");
 }
 
-/* ===== ADICIONAR PONTOS ===== */
-window.adicionar=async(id)=>{
-if(!modoAdmin) return;
+/* ===== MODAL FUNÇÕES ===== */
 
-let pontos = prompt("Quantos pontos?");
-if(!pontos) return;
+window.adicionar = function(id){
+if(!modoAdmin) return;
+participanteAtual=id;
+const nome=participantes.find(p=>p.id==id).nome;
+document.getElementById("modal-nome").innerText=nome;
+document.getElementById("valorCustom").value="";
+document.getElementById("modal").classList.remove("hidden");
+}
+
+window.setValor = function(valor){
+document.getElementById("valorCustom").value=valor;
+}
+
+window.fecharModal = function(){
+document.getElementById("modal").classList.add("hidden");
+}
+
+window.confirmarPontos = async function(){
+const valor=parseInt(document.getElementById("valorCustom").value);
+if(!valor) return;
 
 await addDoc(collection(db,"transacoes"),{
-participante_id:id,
-valor:parseInt(pontos),
+participante_id:participanteAtual,
+valor:valor,
 data:new Date()
 });
-};
 
-/* ===== FIRESTORE REALTIME ===== */
+fecharModal();
+}
+
+/* ===== FIRESTORE ===== */
 onSnapshot(collection(db,"transacoes"),(snapshot)=>{
 transacoes=snapshot.docs.map(doc=>doc.data());
 render();
