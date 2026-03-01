@@ -1,134 +1,205 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking Jovens</title>
+<title>Virtudes</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
 body{
-    font-family: Arial;
-    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:white;
-    text-align:center;
+background:linear-gradient(135deg,#008ecc,#d91e26);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+color:#fff
 }
-.container{
-    max-width:700px;
-    margin:auto;
+.container{width:100%;max-width:500px;display:flex;flex-direction:column;gap:20px}
+.glass{
+background:rgba(255,255,255,0.15);
+border-radius:16px;
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,0.3);
+padding:20px
 }
-.card{
-    background:#1e1e1e;
-    padding:15px;
-    margin:10px;
-    border-radius:12px;
-}
+.hidden{display:none}
 button{
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600
 }
-.admin{
-    background:#00c853;
+.btn-green{background:#28a745;color:#fff}
+.btn-red{background:#dc3545;color:#fff}
+.card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+margin-bottom:8px
 }
-input, select{
-    padding:8px;
-    margin:5px;
-    border-radius:8px;
-    border:none;
-}
+.rank-1{border:1px solid gold}
+.rank-2{border:1px solid silver}
+.rank-3{border:1px solid #CD7F32}
 </style>
 </head>
 <body>
 
 <div class="container">
-<h1>🏆 Ranking Jovens</h1>
 
-<div id="ranking"></div>
-
-<div id="adminArea" style="display:none;">
-<h3>Painel Admin</h3>
-
-<select id="participanteSelect"></select>
-<input type="number" id="pontosAdd" placeholder="Adicionar pontos">
-<button class="admin" onclick="adicionarPontos()">Adicionar</button>
-
+<div class="glass">
+<h2>Virtudes - Jovens</h2>
+<button id="btn-admin" class="btn-green">Área Admin</button>
+<button id="btn-sair" class="btn-red hidden">Sair Admin</button>
 </div>
 
-<br>
-<button onclick="login()">Login Admin</button>
+<div id="ranking" class="glass"></div>
+
+<div id="admin-panel" class="glass hidden">
+<h3>Lançar Pontos</h3>
+<select id="participante"></select>
+<input type="number" id="valor" placeholder="Pontos">
+<input type="text" id="motivo" placeholder="Motivo">
+<button id="btn-add" class="btn-green">Adicionar</button>
+
+<hr style="margin:15px 0">
+
+<h3>Histórico</h3>
+<div id="historico"></div>
+<button id="btn-reset" class="btn-red">Encerrar Lição</button>
+</div>
+
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, doc, updateDoc, onSnapshot, query, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
-  authDomain: "ranking-jovens-d17d6.firebaseapp.com",
-  projectId: "ranking-jovens-d17d6",
-  storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
-  messagingSenderId: "523093300634",
-  appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
+apiKey: "SUA_API_KEY",
+authDomain: "SEU_AUTH_DOMAIN",
+projectId: "SEU_PROJECT_ID",
+storageBucket: "SEU_BUCKET",
+messagingSenderId: "SEU_ID",
+appId: "SEU_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-window.login = () => {
-    signInWithPopup(auth, provider);
-};
+const SENHA_ADMIN = "admin";
+let modoAdmin = false;
 
-onAuthStateChanged(auth, (user) => {
-    if(user && user.email === "SEU_EMAIL_AQUI"){
-        document.getElementById("adminArea").style.display = "block";
-    }
-});
+const participantes = [
+{id:1,nome:'Ester'},{id:2,nome:'Isabelle'},
+{id:3,nome:'Flavia'},{id:4,nome:'Julia'},
+{id:5,nome:'Geovana'},{id:6,nome:'João'},
+{id:7,nome:'Pedro'},{id:8,nome:'Moises'},
+{id:9,nome:'Miguel'},{id:10,nome:'Mariana'},
+{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
+{id:13,nome:'Guilherme'}
+];
+
+let transacoes = [];
 
 const rankingDiv = document.getElementById("ranking");
-const select = document.getElementById("participanteSelect");
+const historicoDiv = document.getElementById("historico");
+const adminPanel = document.getElementById("admin-panel");
 
-const q = query(collection(db, "participantes"), orderBy("pontos", "desc"));
-
-onSnapshot(q, (snapshot)=>{
-    rankingDiv.innerHTML = "";
-    select.innerHTML = "";
-
-    snapshot.forEach(docSnap=>{
-        const data = docSnap.data();
-        const id = docSnap.id;
-
-        rankingDiv.innerHTML += `
-        <div class="card">
-            <h3>${data.nome}</h3>
-            <p>${data.pontos} pontos</p>
-        </div>
-        `;
-
-        select.innerHTML += `
-        <option value="${id}">${data.nome}</option>
-        `;
-    });
-});
-
-window.adicionarPontos = async () => {
-    const id = select.value;
-    const pontos = parseInt(document.getElementById("pontosAdd").value);
-
-    const ref = doc(db, "participantes", id);
-
-    await updateDoc(ref, {
-        pontos: increment(pontos)
-    });
-
-    document.getElementById("pontosAdd").value = "";
+document.getElementById("btn-admin").onclick=()=>{
+const senha = prompt("Digite a senha:");
+if(senha===SENHA_ADMIN){
+modoAdmin=true;
+adminPanel.classList.remove("hidden");
+document.getElementById("btn-admin").classList.add("hidden");
+document.getElementById("btn-sair").classList.remove("hidden");
+}else{
+alert("Senha incorreta");
+}
 };
 
-</script>
+document.getElementById("btn-sair").onclick=()=>{
+modoAdmin=false;
+adminPanel.classList.add("hidden");
+document.getElementById("btn-admin").classList.remove("hidden");
+document.getElementById("btn-sair").classList.add("hidden");
+};
 
+function renderRanking(){
+const ranking=participantes.map(p=>{
+const soma=transacoes
+.filter(t=>t.participante_id==p.id)
+.reduce((a,b)=>a+b.valor,0);
+return {...p,pontos:soma};
+}).sort((a,b)=>b.pontos-a.pontos);
+
+rankingDiv.innerHTML=ranking.map((p,i)=>{
+let cls="";
+if(i==0)cls="rank-1";
+if(i==1)cls="rank-2";
+if(i==2)cls="rank-3";
+return `<div class="card ${cls}">
+<span>${i+1}º - ${p.nome}</span>
+<strong>${p.pontos}</strong>
+</div>`;
+}).join("");
+}
+
+function renderHistorico(){
+historicoDiv.innerHTML=transacoes.slice().reverse().map(t=>{
+const nome=participantes.find(p=>p.id==t.participante_id).nome;
+return `<div class="card">
+<span>${nome} +${t.valor}</span>
+<button onclick="deletar('${t.id}')">X</button>
+</div>`;
+}).join("");
+}
+
+window.deletar=async(id)=>{
+if(!modoAdmin) return;
+await deleteDoc(doc(db,"transacoes",id));
+};
+
+document.getElementById("btn-add").onclick=async()=>{
+if(!modoAdmin) return;
+
+const id=parseInt(document.getElementById("participante").value);
+const valor=parseInt(document.getElementById("valor").value);
+const motivo=document.getElementById("motivo").value;
+
+await addDoc(collection(db,"transacoes"),{
+participante_id:id,
+valor:valor,
+motivo:motivo,
+data:new Date()
+});
+};
+
+document.getElementById("btn-reset").onclick=async()=>{
+if(!modoAdmin) return;
+if(confirm("Tem certeza?")){
+const snapshot=await getDocs(collection(db,"transacoes"));
+snapshot.forEach(async(d)=>{
+await deleteDoc(doc(db,"transacoes",d.id));
+});
+}
+};
+
+onSnapshot(collection(db,"transacoes"),(snapshot)=>{
+transacoes=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
+renderRanking();
+renderHistorico();
+});
+
+document.getElementById("participante").innerHTML=
+participantes.map(p=>`<option value="${p.id}">${p.nome}</option>`).join("");
+
+</script>
 </body>
 </html>
