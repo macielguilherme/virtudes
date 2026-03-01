@@ -8,138 +8,203 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-
-body{
-background:linear-gradient(135deg,#008ecc,#d91e26);
-min-height:100vh;
-display:flex;
-justify-content:center;
-padding:25px;
-color:#fff;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-.container{width:100%;max-width:500px}
-
-.glass{
-background:rgba(255,255,255,0.15);
-border-radius:18px;
-backdrop-filter:blur(10px);
-border:1px solid rgba(255,255,255,0.3);
-padding:20px;
-margin-bottom:20px;
+/* Fundo animado preenchendo lentamente */
+body {
+    background: linear-gradient(-45deg, #0b2242, #7a0e19, #008ecc, #d91e26, #050b14);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+    color: #fff;
 }
 
-#titulo{
-text-align:center;
-font-size:1.9rem;
-font-weight:700;
-cursor:pointer;
-letter-spacing:1px;
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.admin-active{
-box-shadow:0 0 20px #00ff99;
+.container {
+    width: 100%;
+    max-width: 500px;
 }
 
-.card{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px;
-margin-bottom:10px;
-border-radius:12px;
-cursor:pointer;
-transition:0.2s;
-background:rgba(255,255,255,0.08);
+/* Glass principal */
+.glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    padding: 25px;
+    margin-bottom: 25px;
 }
 
-.card:hover{
-background:rgba(255,255,255,0.15);
+#titulo {
+    text-align: center;
+    font-size: 1.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.rank-1{border:1px solid gold}
-.rank-2{border:1px solid silver}
-.rank-3{border:1px solid #CD7F32}
+.admin-active {
+    box-shadow: 0 0 25px rgba(0, 255, 153, 0.4);
+    border: 1px solid rgba(0, 255, 153, 0.5);
+}
+
+/* Cards em Glass */
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Cores do pódio em modo glass */
+.rank-1 { border: 1px solid rgba(255, 215, 0, 0.5); background: rgba(255, 215, 0, 0.1); }
+.rank-2 { border: 1px solid rgba(192, 192, 192, 0.4); background: rgba(192, 192, 192, 0.08); }
+.rank-3 { border: 1px solid rgba(205, 127, 50, 0.4); background: rgba(205, 127, 50, 0.08); }
 
 /* ===== MODAL ===== */
 
-.modal{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-display:flex;
-justify-content:center;
-align-items:center;
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px); /* Fundo embaçado atrás do modal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.hidden{display:none}
+.hidden { display: none; }
 
-.modal-content{
-background:#fff;
-color:#333;
-padding:25px;
-border-radius:16px;
-width:90%;
-max-width:350px;
-text-align:center;
-animation:fadeIn .2s ease;
+.modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+    animation: fadeIn .3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes fadeIn{
-from{transform:scale(.9);opacity:0}
-to{transform:scale(1);opacity:1}
+.modal-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.quick-buttons{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin:15px 0;
+@keyframes fadeIn {
+    from { transform: scale(.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
-.quick-buttons button{
-padding:10px;
-border:none;
-border-radius:8px;
-background:#008ecc;
-color:white;
-font-weight:bold;
-cursor:pointer;
+/* Botões rápidos com efeito vidro */
+.quick-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
 }
 
-.quick-buttons button:hover{
-opacity:.8;
+.quick-buttons button {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.modal-content input{
-width:100%;
-padding:10px;
-border-radius:8px;
-border:1px solid #ccc;
-margin-top:10px;
+.quick-buttons button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
 }
 
-.modal-actions{
-margin-top:15px;
-display:flex;
-gap:10px;
+/* Input de texto translúcido */
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    margin-top: 5px;
+    font-size: 1.1rem;
+    outline: none;
+    transition: border 0.3s ease;
 }
 
-.modal-actions button{
-flex:1;
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
+.modal-content input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.confirm{background:#28a745;color:white}
-.cancel{background:#dc3545;color:white}
+.modal-content input:focus {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 12px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.confirm { background: rgba(40, 167, 69, 0.5); }
+.confirm:hover { background: rgba(40, 167, 69, 0.7); transform: translateY(-2px); }
+
+.cancel { background: rgba(220, 53, 69, 0.5); }
+.cancel:hover { background: rgba(220, 53, 69, 0.7); transform: translateY(-2px); }
+
 </style>
 </head>
 <body>
@@ -154,7 +219,6 @@ font-weight:bold;
 
 </div>
 
-<!-- MODAL -->
 <div id="modal" class="modal hidden">
 <div class="modal-content">
 <h3 id="modal-nome"></h3>
