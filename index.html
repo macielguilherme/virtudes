@@ -80,22 +80,27 @@ background:rgba(255,255,255,0.15);
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* ===== CONFIG REAL DO SEU PROJETO ===== */
 const firebaseConfig = {
-apiKey: "SUA_API_KEY",
-authDomain: "SEU_AUTH_DOMAIN",
-projectId: "SEU_PROJECT_ID",
-storageBucket: "SEU_BUCKET",
-messagingSenderId: "SEU_ID",
-appId: "SEU_APP_ID"
+  apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+  authDomain: "ranking-jovens-d17d6.firebaseapp.com",
+  projectId: "ranking-jovens-d17d6",
+  storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
+  messagingSenderId: "523093300634",
+  appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+console.log("🔥 Firebase conectado com sucesso");
+
+/* ===== CONFIG ADMIN ===== */
 const SENHA_ADMIN = "admin";
 let modoAdmin = false;
 let tempoPressionado;
 
+/* ===== PARTICIPANTES ===== */
 const participantes = [
 {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},
 {id:3,nome:'Flavia'},{id:4,nome:'Julia'},
@@ -130,10 +135,9 @@ rankingDiv.classList.remove("admin-active");
 alert("Modo Admin Desativado");
 },2000);
 });
-
 titulo.addEventListener("mouseup",()=>clearTimeout(tempoPressionado));
 
-/* ===== RENDER RANKING ===== */
+/* ===== RENDER ===== */
 function render(){
 const ranking=participantes.map(p=>{
 const soma=transacoes
