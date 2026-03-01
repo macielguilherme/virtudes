@@ -3,44 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Virtudes</title>
+<title>Virtudes - Jovens</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
 body{
 background:linear-gradient(135deg,#008ecc,#d91e26);
 min-height:100vh;
 display:flex;
-flex-direction:column;
-align-items:center;
-padding:20px;
-color:#fff
+justify-content:center;
+padding:25px;
+color:#fff;
 }
+
 .container{width:100%;max-width:500px}
+
 .glass{
 background:rgba(255,255,255,0.15);
-border-radius:16px;
-backdrop-filter:blur(8px);
+border-radius:18px;
+backdrop-filter:blur(10px);
 border:1px solid rgba(255,255,255,0.3);
 padding:20px;
-margin-bottom:15px
+margin-bottom:20px;
 }
+
+#titulo{
+text-align:center;
+font-size:1.9rem;
+font-weight:700;
+cursor:pointer;
+letter-spacing:1px;
+}
+
+.admin-active{
+box-shadow:0 0 20px #00ff99;
+}
+
 .card{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:12px;
-margin-bottom:8px;
+padding:14px;
+margin-bottom:10px;
+border-radius:12px;
 cursor:pointer;
 transition:0.2s;
+background:rgba(255,255,255,0.08);
 }
-.card:hover{background:rgba(255,255,255,0.1)}
+
+.card:hover{
+background:rgba(255,255,255,0.15);
+}
+
 .rank-1{border:1px solid gold}
 .rank-2{border:1px solid silver}
 .rank-3{border:1px solid #CD7F32}
-.admin-mode{box-shadow:0 0 15px #00ff99}
 </style>
 </head>
 <body>
@@ -49,7 +69,6 @@ transition:0.2s;
 
 <div class="glass">
 <h2 id="titulo">Virtudes - Jovens</h2>
-<p style="font-size:12px;opacity:0.6">Clique no nome para atualizar (admin)</p>
 </div>
 
 <div id="ranking" class="glass"></div>
@@ -73,8 +92,9 @@ appId: "SEU_APP_ID"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const SENHA = "admin";
+const SENHA_ADMIN = "admin";
 let modoAdmin = false;
+let tempoPressionado;
 
 const participantes = [
 {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},
@@ -88,15 +108,32 @@ const participantes = [
 
 let transacoes = [];
 
-document.getElementById("titulo").onclick=()=>{
-const senha = prompt("Senha admin:");
-if(senha===SENHA){
-modoAdmin=true;
-alert("Modo admin ativado");
-document.getElementById("ranking").classList.add("admin-mode");
-}
-};
+const rankingDiv = document.getElementById("ranking");
+const titulo = document.getElementById("titulo");
 
+/* ===== ATIVAR ADMIN ===== */
+titulo.addEventListener("click",()=>{
+if(modoAdmin) return;
+const senha = prompt("Senha admin:");
+if(senha===SENHA_ADMIN){
+modoAdmin=true;
+rankingDiv.classList.add("admin-active");
+alert("Modo Admin Ativado");
+}
+});
+
+/* ===== DESATIVAR ADMIN (segurar 2s) ===== */
+titulo.addEventListener("mousedown",()=>{
+tempoPressionado=setTimeout(()=>{
+modoAdmin=false;
+rankingDiv.classList.remove("admin-active");
+alert("Modo Admin Desativado");
+},2000);
+});
+
+titulo.addEventListener("mouseup",()=>clearTimeout(tempoPressionado));
+
+/* ===== RENDER RANKING ===== */
 function render(){
 const ranking=participantes.map(p=>{
 const soma=transacoes
@@ -105,7 +142,7 @@ const soma=transacoes
 return {...p,pontos:soma};
 }).sort((a,b)=>b.pontos-a.pontos);
 
-document.getElementById("ranking").innerHTML=ranking.map((p,i)=>{
+rankingDiv.innerHTML=ranking.map((p,i)=>{
 let cls="";
 if(i==0)cls="rank-1";
 if(i==1)cls="rank-2";
@@ -117,10 +154,11 @@ return `<div class="card ${cls}" onclick="adicionar(${p.id})">
 }).join("");
 }
 
+/* ===== ADICIONAR PONTOS ===== */
 window.adicionar=async(id)=>{
 if(!modoAdmin) return;
 
-let pontos = prompt("Quantos pontos adicionar?");
+let pontos = prompt("Quantos pontos?");
 if(!pontos) return;
 
 await addDoc(collection(db,"transacoes"),{
@@ -130,6 +168,7 @@ data:new Date()
 });
 };
 
+/* ===== FIRESTORE REALTIME ===== */
 onSnapshot(collection(db,"transacoes"),(snapshot)=>{
 transacoes=snapshot.docs.map(doc=>doc.data());
 render();
