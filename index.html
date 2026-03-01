@@ -152,7 +152,7 @@ if(i==0)cls="rank-1";
 if(i==1)cls="rank-2";
 if(i==2)cls="rank-3";
 return `<div class="card ${cls}" onclick="adicionar(${p.id})">
-<span>${i+1}º - ${p.nome}</span>
+<span>${i+1}º&nbsp;&nbsp;${p.nome}</span>
 <strong>${p.pontos}</strong>
 </div>`;
 }).join("");
