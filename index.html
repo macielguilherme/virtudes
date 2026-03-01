@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtudes - Sistema de Pontuação V2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: linear-gradient(135deg, #008ecc 0%, #d91e26 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    color: #ffffff;
+}
+
+.container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+
+.glass {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hidden { display: none !important; }
+
+.header { padding: 20px; text-align: center; position: relative; }
+.header h1 { font-size: 1.8rem; font-weight: 700; }
+.header p { font-size: 0.9rem; }
+
+.btn-admin-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+}
+
+.lista-participantes { display: flex; flex-direction: column; gap: 10px; }
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+}
+
+.rank-1 { border: 1px solid gold; }
+.rank-2 { border: 1px solid silver; }
+.rank-3 { border: 1px solid #CD7F32; }
+
+.info { display: flex; align-items: center; gap: 10px; }
+.posicao { font-weight: 700; width: 30px; text-align: center; }
+.nome { font-weight: 600; }
+.pontos-atuais { font-size: 1.2rem; font-weight: 700; }
+
+.admin-panel { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-control { padding: 10px; border-radius: 8px; border: none; }
+
+.btn-primary {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.historico-lista { display: flex; flex-direction: column; gap: 8px; }
+.transacao-card {
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.btn-del { background: none; border: none; color: #ff4d4d; cursor: pointer; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header glass">
+<h1>Virtudes</h1>
+<p>Sistema de Pontuação</p>
+<button class="btn-admin-toggle" id="btn-toggle-admin">
+<span class="material-symbols-outlined" id="admin-icon">lock</span>
+</button>
+</header>
+
+<main id="view-ranking" class="lista-participantes"></main>
+
+<main id="view-admin" class="hidden">
+
+<div class="admin-panel glass">
+<h2>Lançar Pontos</h2>
+
+<div class="form-group">
+<label>Participante</label>
+<select id="input-participante" class="form-control"></select>
+</div>
+
+<div class="form-group">
+<label>Categoria</label>
+<select id="input-categoria" class="form-control">
+<option value="EBD">EBD</option>
+<option value="Culto">Culto</option>
+<option value="Desafios">Desafios</option>
+<option value="Outros">Outros</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Pontos</label>
+<input type="number" id="input-valor" class="form-control">
+</div>
+
+<div class="form-group">
+<label>Motivo</label>
+<input type="text" id="input-motivo" class="form-control">
+</div>
+
+<button class="btn-primary" id="btn-salvar-pontos">Confirmar Pontuação</button>
+</div>
+
+<div class="admin-panel glass">
+<h2>Últimos Lançamentos</h2>
+<div class="historico-lista" id="lista-historico"></div>
+<button class="btn-danger" id="btn-reset">Encerrar Lição</button>
+</div>
+
+</main>
+</div>
+
+<script>
+
+const DataLayer = {
+participantesBase: [
+{ id:1,nome:'Ester'},{ id:2,nome:'Isabelle'},
+{ id:3,nome:'Flavia'},{ id:4,nome:'Julia'},
+{ id:5,nome:'Geovana'},{ id:6,nome:'João'},
+{ id:7,nome:'Pedro'},{ id:8,nome:'Moises'},
+{ id:9,nome:'Miguel'},{ id:10,nome:'Mariana'},
+{ id:11,nome:'Mateus'},{ id:12,nome:'Davi'},
+{ id:13,nome:'Guilherme'}
+],
+
+getTransacoes(){ return JSON.parse(localStorage.getItem('virtudes_ledger')) || []; },
+
+salvarTransacao(t){
+const transacoes=this.getTransacoes();
+transacoes.push(t);
+localStorage.setItem('virtudes_ledger',JSON.stringify(transacoes));
+},
+
+removerTransacao(id){
+let transacoes=this.getTransacoes();
+transacoes=transacoes.filter(t=>t.id!==id);
+localStorage.setItem('virtudes_ledger',JSON.stringify(transacoes));
+},
+
+limparTransacoes(){ localStorage.setItem('virtudes_ledger',JSON.stringify([])); }
+};
+
+function seedInicial(){
+if(DataLayer.getTransacoes().length>0) return;
+
+const dados=[357,530,112,321,120,210,293,280,100,1,5,66,42];
+
+dados.forEach((pontos,index)=>{
+DataLayer.salvarTransacao({
+id:Date.now()+Math.random(),
+participante_id:index+1,
+categoria:"Importação",
+valor:pontos,
+motivo:"Pontuação inicial",
+data:new Date().toLocaleString('pt-BR')
+});
+});
+}
+
+const BusinessLayer={
+isAdmin:false,
+senhaAdmin:"admin123",
+
+getRanking(){
+const transacoes=DataLayer.getTransacoes();
+const ranking=DataLayer.participantesBase.map(p=>{
+const soma=transacoes
+.filter(t=>t.participante_id==p.id)
+.reduce((a,b)=>a+parseInt(b.valor),0);
+return {...p,pontos:soma};
+});
+return ranking.sort((a,b)=>b.pontos-a.pontos);
+},
+
+adicionarPontos(id,cat,val,mot){
+if(!val) return;
+DataLayer.salvarTransacao({
+id:Date.now(),
+participante_id:id,
+categoria:cat,
+valor:parseInt(val),
+motivo:mot,
+data:new Date().toLocaleString('pt-BR')
+});
+}
+};
+
+const UILayer={
+init(){
+seedInicial();
+this.renderRanking();
+this.popularSelect();
+this.bind();
+},
+
+bind(){
+document.getElementById('btn-toggle-admin').addEventListener('click',()=>{
+if(BusinessLayer.isAdmin){this.sairAdmin();}
+else{this.entrarAdmin();}
+});
+
+document.getElementById('btn-salvar-pontos').addEventListener('click',()=>{
+const id=document.getElementById('input-participante').value;
+const cat=document.getElementById('input-categoria').value;
+const val=document.getElementById('input-valor').value;
+const mot=document.getElementById('input-motivo').value;
+BusinessLayer.adicionarPontos(id,cat,val,mot);
+this.renderRanking();
+this.renderHistorico();
+});
+
+document.getElementById('btn-reset').addEventListener('click',()=>{
+if(confirm("Zerar tudo?")){
+DataLayer.limparTransacoes();
+this.init();
+}
+});
+},
+
+entrarAdmin(){
+const senha=prompt("Senha:");
+if(senha===BusinessLayer.senhaAdmin){
+BusinessLayer.isAdmin=true;
+document.getElementById('view-ranking').classList.add('hidden');
+document.getElementById('view-admin').classList.remove('hidden');
+this.renderHistorico();
+}
+},
+
+sairAdmin(){
+BusinessLayer.isAdmin=false;
+document.getElementById('view-admin').classList.add('hidden');
+document.getElementById('view-ranking').classList.remove('hidden');
+},
+
+renderRanking(){
+const ranking=BusinessLayer.getRanking();
+const container=document.getElementById('view-ranking');
+let html="";
+ranking.forEach((p,i)=>{
+let cls="";
+if(i==0)cls="rank-1";
+if(i==1)cls="rank-2";
+if(i==2)cls="rank-3";
+html+=`<div class="card glass ${cls}">
+<div class="info">
+<span class="posicao">${i+1}º</span>
+<span class="nome">${p.nome}</span>
+</div>
+<div class="pontos-atuais">${p.pontos}</div>
+</div>`;
+});
+container.innerHTML=html;
+},
+
+popularSelect(){
+const select=document.getElementById('input-participante');
+select.innerHTML=DataLayer.participantesBase
+.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('');
+},
+
+renderHistorico(){
+const transacoes=DataLayer.getTransacoes().reverse().slice(0,10);
+const container=document.getElementById('lista-historico');
+container.innerHTML=transacoes.map(t=>{
+const nome=DataLayer.participantesBase.find(p=>p.id==t.participante_id).nome;
+return `<div class="transacao-card">
+<div><strong>${nome}</strong> (+${t.valor})</div>
+<button class="btn-del" onclick="deletar(${t.id})">X</button>
+</div>`;
+}).join('');
+}
+};
+
+window.deletar=function(id){
+DataLayer.removerTransacao(id);
+UILayer.renderRanking();
+UILayer.renderHistorico();
+};
+
+UILayer.init();
+</script>
+
+</body>
+</html>
