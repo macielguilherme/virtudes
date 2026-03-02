@@ -68,7 +68,7 @@
         #menu-toggle:checked ~ .main-menu { right: 0; }
         .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: 2.5px; }
 
-        /* --- LAYOUT LADO A LADO --- */
+        /* --- LAYOUT INVERTIDO (TEXTO ESQUERDA, IMAGEM DIREITA) --- */
         .informe-container {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -84,23 +84,10 @@
             gap: 30px;
             max-width: 1200px;
             width: 100%;
-            align-items: stretch; /* Alinha a altura do card com a imagem */
+            align-items: stretch; /* Garante alturas iguais */
         }
 
-        .image-side {
-            flex: 1 1 480px;
-            display: flex;
-        }
-
-        .informe-img {
-            width: 100%;
-            height: 100%; /* Garante que preencha o espaço vertical */
-            object-fit: cover; /* Mantém a proporção da imagem sem achatar */
-            border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            border: 1px solid var(--border-light);
-        }
-
+        /* Lado do Texto (Agora na Esquerda no Desktop) */
         .details-side {
             flex: 1 1 450px;
             background: rgba(255, 255, 255, 0.03);
@@ -111,13 +98,30 @@
             padding: 60px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Distribui o conteúdo verticalmente */
+            justify-content: space-between;
             position: relative;
             overflow: hidden;
+            order: 1; /* Primeiro no desktop */
         }
 
-        /* --- TEXTOS E ELEMENTOS --- */
-        .info-header .info-tag {
+        /* Lado da Imagem (Agora na Direita no Desktop) */
+        .image-side {
+            flex: 1 1 480px;
+            display: flex;
+            order: 2; /* Segundo no desktop */
+        }
+
+        .informe-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-light);
+        }
+
+        /* --- TEXTOS --- */
+        .info-tag {
             font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -154,11 +158,6 @@
 
         .meta-item p { font-size: 1rem; color: var(--text-primary); line-height: 1.4; }
 
-        .bible-quote {
-            position: relative;
-            z-index: 1;
-        }
-
         .bible-quote p {
             font-size: 1.05rem;
             line-height: 1.6;
@@ -181,22 +180,22 @@
             opacity: 0.02;
             position: absolute;
             bottom: -5px;
-            right: 15px;
+            left: 20px; /* Movido para esquerda para equilibrar com o layout */
             text-transform: uppercase;
             pointer-events: none;
             user-select: none;
         }
 
-        /* --- MOBILE --- */
+        /* --- RESPONSIVIDADE --- */
         @media (max-width: 968px) {
-            .informe-container { padding: 40px 20px; }
             .details-side { 
+                order: 2; /* No celular, a imagem volta a ficar em cima do texto */
                 padding: 40px 25px; 
-                border-radius: 24px;
-                min-height: 500px;
+                min-height: auto;
             }
+            .image-side { order: 1; }
+            .informe-container { padding: 40px 20px; }
             .event-card h1 { font-size: 2rem; }
-            .watermark { font-size: 2.8rem; }
         }
 
         .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
@@ -224,16 +223,12 @@
     <main class="informe-container">
         <div class="content-wrapper">
             
-            <div class="image-side">
-                <img src="pizza.jpg" alt="Convite Noite da Pizza" class="informe-img">
-            </div>
-
             <div class="details-side">
                 <div class="info-header">
                     <span class="info-tag">Informações Principais</span>
                     <div class="event-card">
                         <h1>NOITE DA <span style="color: var(--accent-red);">PIZZA</span><br>
-                        <span style="font-weight: 300; font-size: 0.55em; color: var(--text-secondary); vertical-align: middle;">Comunhão & Jogos</span></h1>
+                        <span style="font-weight: 300; font-size: 0.55em; color: var(--text-secondary);">Comunhão & Jogos</span></h1>
                     </div>
                 </div>
 
@@ -254,6 +249,10 @@
                 </div>
 
                 <div class="watermark">Continuamente</div>
+            </div>
+
+            <div class="image-side">
+                <img src="pizza.jpg" alt="Convite Noite da Pizza" class="informe-img">
             </div>
 
         </div>
