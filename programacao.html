@@ -71,338 +71,119 @@
             transition: var(--transition-smooth); border-left: 1px solid var(--border-light); z-index: 2000;
         }
         #menu-toggle:checked ~ .main-menu { right: 0; }
-        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: pointer; }
         .main-menu a:hover { color: var(--accent-red); transform: translateX(5px); }
         
         .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
         #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
+        /* --- MODAL DE SENHA --- */
+        .modal-pwd {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center; z-index: 5000;
+        }
+        .modal-pwd.active { display: flex; }
+        .modal-pwd-card {
+            background: var(--bg-secondary); border: 1px solid var(--border-light); padding: 35px;
+            border-radius: 28px; width: 90%; max-width: 380px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+            animation: modalIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-pwd-card h2 { font-size: 1.5rem; margin-bottom: 10px; }
+        .modal-pwd-card p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 25px; }
+        .modal-pwd-card input {
+            width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light);
+            border-radius: 14px; color: #fff; text-align: center; font-size: 1.1rem; margin-bottom: 20px; outline: none;
+        }
+        .modal-pwd-card input:focus { border-color: var(--accent-red); }
+        .btn-entrar {
+            width: 100%; padding: 16px; background: var(--accent-red); color: #fff; border: none;
+            border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn-entrar:hover { opacity: 0.9; transform: scale(0.98); }
+        .close-modal { margin-top: 15px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; display: block; text-decoration: underline; }
+
         /* --- CONTAINER PRINCIPAL --- */
-        .container {
-            width: 90%;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .header-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .header-title h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            background: linear-gradient(to right, #fff, #a3a3a3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-title p {
-            font-size: 0.75rem;
-            color: var(--accent-red);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 12px;
-        }
-
-        /* --- ANIMAÇÃO DE ENTRADA --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .container { width: 90%; max-width: 650px; margin: 0 auto; }
+        .header-title { text-align: center; margin-bottom: 50px; }
+        .header-title h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; background: linear-gradient(to right, #fff, #a3a3a3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-title p { font-size: 0.75rem; color: var(--accent-red); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 12px; }
 
         /* --- LISTA DE PROGRAMAÇÃO --- */
-        .schedule-list {
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
+        .schedule-list { display: flex; flex-direction: column; gap: 22px; }
         .event-item {
-            background: var(--glass-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 24px;
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            animation: fadeInUp 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            background: var(--glass-bg); border: 1px solid var(--border-light); border-radius: 24px; padding: 24px;
+            display: flex; gap: 24px; align-items: flex-start; transition: var(--transition-smooth);
+            position: relative; overflow: hidden; opacity: 0; animation: fadeInUp 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
         }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Delay em cascata para cada card */
-        .event-item:nth-child(1) { animation-delay: 0.1s; }
-        .event-item:nth-child(2) { animation-delay: 0.2s; }
-        .event-item:nth-child(3) { animation-delay: 0.3s; }
-        .event-item:nth-child(4) { animation-delay: 0.4s; }
-        .event-item:nth-child(5) { animation-delay: 0.5s; }
-        .event-item:nth-child(6) { animation-delay: 0.6s; }
-
-        .event-item:hover {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border-color: rgba(239, 68, 68, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5), 0 0 20px -5px var(--accent-glow);
-        }
-
-        /* Cor especial no hover de eventos normais */
+        .event-item:hover { border-color: rgba(239, 68, 68, 0.4); transform: translateY(-4px); box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5), 0 0 20px -5px var(--accent-glow); }
         .event-item.normal:hover { border-color: var(--border-hover); box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5); }
 
-        .event-date {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--accent-red);
-            padding: 18px 20px;
-            border-radius: 18px;
-            text-align: center;
-            min-width: 95px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: inset 0 2px 10px rgba(255,255,255,0.05);
-        }
+        .event-date { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--accent-red); padding: 18px 20px; border-radius: 18px; text-align: center; min-width: 95px; }
+        .event-date.recurrent { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-primary); }
+        .event-date span { display: block; font-size: 1.9rem; font-weight: 800; line-height: 1; margin-bottom: 5px; }
+        .event-date small { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; }
 
-        .event-date.recurrent {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
+        .event-details { flex: 1; width: 100%; }
+        .event-details h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+        .event-details p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 15px; }
 
-        .event-date span {
-            display: block;
-            font-size: 1.9rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-        }
+        /* --- TAGS, GRIDS E ESCALAS --- */
+        .event-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .tag { font-size: 0.7rem; font-weight: 600; padding: 6px 14px; border-radius: 30px; background: rgba(255, 255, 255, 0.04); color: var(--text-secondary); border: 1px solid var(--border-light); }
+        .tag.time { background: rgba(255, 255, 255, 0.9); color: #000; font-weight: 700; }
 
-        .event-date small {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-        }
+        .roles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 15px 0; }
+        .role-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-light); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .role-title { font-size: 0.65rem; color: var(--accent-red); text-transform: uppercase; font-weight: 800; }
+        .role-name { font-size: 0.9rem; color: var(--text-primary); font-weight: 500; }
+        .role-box.full { grid-column: span 2; }
 
-        .event-details {
-            flex: 1;
-            width: 100%;
-        }
+        details { margin-top: 20px; background: rgba(0, 0, 0, 0.5); border-radius: 16px; padding: 15px 18px; border: 1px solid var(--border-light); transition: var(--transition-smooth); }
+        summary { cursor: pointer; font-size: 0.8rem; font-weight: 700; color: var(--text-primary); list-style: none; display: flex; align-items: center; justify-content: space-between; outline: none; }
+        summary::after { content: '+'; color: var(--accent-red); font-size: 1.4rem; transition: 0.4s; }
+        details[open] summary::after { transform: rotate(45deg); }
 
-        .event-details h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .event-details p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        /* --- TAGS --- */
-        .event-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .tag {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 6px 14px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .tag.time {
-            background: rgba(255, 255, 255, 0.9);
-            color: #000;
-            border-color: transparent;
-            font-weight: 700;
-        }
-
-        /* --- GRIDS DE ESCALA (UX APRIMORADA) --- */
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .role-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-light);
-            padding: 12px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .role-title {
-            font-size: 0.65rem;
-            color: var(--accent-red);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 800;
-        }
-
-        .role-name {
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .role-box.full { grid-column: span 2; } /* Para ocupar a linha toda */
-
-        /* --- DETALHES RETRÁTEIS (ACORDEÃO E TIMELINE) --- */
-        details {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 16px;
-            padding: 15px 18px;
-            border: 1px solid var(--border-light);
-            transition: var(--transition-smooth);
-        }
-
-        details[open] { border-color: rgba(239, 68, 68, 0.3); }
-
-        summary {
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-primary);
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            outline: none;
-        }
-
-        summary::-webkit-details-marker { display: none; }
-        summary::after { 
-            content: '+'; 
-            font-size: 1.4rem; 
-            font-weight: 400; 
-            color: var(--accent-red);
-            transition: var(--transition-smooth);
-        }
-        details[open] summary::after { transform: rotate(45deg); } /* Vira um X */
-
-        .culto-ordem {
-            margin-top: 20px;
-            padding-top: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-        }
-
-        /* A LINHA DO TEMPO VERTICAL */
-        .culto-ordem::before {
-            content: '';
-            position: absolute;
-            left: 13px; /* Centralizado com o círculo */
-            top: 10px;
-            bottom: 15px;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--accent-red) 0%, rgba(255,255,255,0.1) 100%);
-            z-index: 0;
-        }
-
-        .step {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-num {
-            background: var(--bg-primary);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 800;
-            min-width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            border: 2px solid var(--border-light);
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        
-        /* Destaque para os primeiros passos */
+        .culto-ordem { margin-top: 20px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+        .culto-ordem::before { content: ''; position: absolute; left: 13px; top: 10px; bottom: 15px; width: 2px; background: linear-gradient(to bottom, var(--accent-red), transparent); }
+        .step { display: flex; gap: 15px; align-items: center; position: relative; z-index: 1; }
+        .step-num { background: var(--bg-primary); color: white; font-size: 0.7rem; min-width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--border-light); }
         .step:nth-child(-n+3) .step-num { border-color: var(--accent-red); color: var(--accent-red); }
+        .step-text { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
 
-        .step-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-            font-weight: 500;
-        }
-
-        /* --- RESPONSIVIDADE --- */
         @media (max-width: 600px) {
-            .event-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-                padding: 20px;
-                border-radius: 20px;
-            }
-
-            .event-date {
-                width: 100%;
-                flex-direction: row;
-                align-items: baseline;
-                gap: 8px;
-                padding: 12px 20px;
-                border-radius: 12px;
-            }
-
+            .event-item { flex-direction: column; padding: 20px; }
+            .event-date { width: 100%; flex-direction: row; align-items: baseline; gap: 8px; padding: 12px 20px; }
             .event-date span { margin-bottom: 0; font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
 
+    <div id="pwdModal" class="modal-pwd">
+        <div class="modal-pwd-card">
+            <h2>Acesso Restrito</h2>
+            <p>Digite a senha para visualizar o Ranking da EBD</p>
+            <input type="password" id="inputSenha" placeholder="Senha">
+            <button class="btn-entrar" onclick="confirmarSenha()">Entrar</button>
+            <span class="close-modal" onclick="fecharModal()">Cancelar</span>
+        </div>
+    </div>
+
     <header class="m3-header">
         <input type="checkbox" id="menu-toggle">
-        
         <a href="index.html" class="brand-logo">Virtudes</a>
-        
         <label for="menu-toggle" class="menu-icon-label">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+            <div class="line"></div><div class="line"></div><div class="line"></div>
         </label>
-        
         <label for="menu-toggle" class="menu-overlay"></label>
-        
         <nav class="main-menu">
             <a href="index.html">Início</a>
-            <a href="#" onclick="verificarSenha(event)">Ranking da EBD</a>
+            <a onclick="abrirModal()">Ranking da EBD</a>
             <a href="programacao.html" style="color: var(--accent-red);">Programação</a>
         </nav>
     </header>
@@ -414,27 +195,20 @@
         </div>
 
         <div class="schedule-list">
-            
             <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>08</span>
-                    <small>Março</small>
-                </div>
+                <div class="event-date recurrent"><span>08</span><small>Março</small></div>
                 <div class="event-details">
                     <h3>Consagração & EBD</h3>
                     <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
                     <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
+                        <span class="tag time">08:30</span><span class="tag">Consagração</span>
+                        <span class="tag time">09:30</span><span class="tag">EBD</span>
                     </div>
                 </div>
             </div>
 
             <div class="event-item">
-                <div class="event-date">
-                    <span>14</span>
-                    <small>Março</small>
-                </div>
+                <div class="event-date"><span>14</span><small>Março</small></div>
                 <div class="event-details">
                     <h3>Noite da Pizza</h3>
                     <p>Nosso momento de descontração, comunhão e muitos jogos. Traga sua alegria!</p>
@@ -442,81 +216,27 @@
             </div>
 
             <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>15</span>
-                    <small>Março</small>
-                </div>
+                <div class="event-date recurrent"><span>15</span><small>Março</small></div>
                 <div class="event-details">
                     <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
                     <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>22</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>29</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
+                        <span class="tag time">08:30</span><span class="tag">Consagração</span>
+                        <span class="tag time">09:30</span><span class="tag">EBD</span>
                     </div>
                 </div>
             </div>
 
             <div class="event-item">
-                <div class="event-date">
-                    <span>18</span>
-                    <small>Abril</small>
-                </div>
+                <div class="event-date"><span>18</span><small>Abril</small></div>
                 <div class="event-details">
                     <h3>Culto de Jovens</h3>
-                    
                     <div class="roles-grid">
-                        <div class="role-box">
-                            <span class="role-title">Direção</span>
-                            <span class="role-name">Isabelle</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Pregação</span>
-                            <span class="role-name">João</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Hino Harpa</span>
-                            <span class="role-name">Flávia</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Portaria</span>
-                            <span class="role-name">Pedro</span>
-                        </div>
-                        <div class="role-box full">
-                            <span class="role-title">Cantina</span>
-                            <span class="role-name">Julia / Isabelle</span>
-                        </div>
+                        <div class="role-box"><span class="role-title">Direção</span><span class="role-name">Isabelle</span></div>
+                        <div class="role-box"><span class="role-title">Pregação</span><span class="role-name">João</span></div>
+                        <div class="role-box"><span class="role-title">Hino Harpa</span><span class="role-name">Flávia</span></div>
+                        <div class="role-box"><span class="role-title">Portaria</span><span class="role-name">Pedro</span></div>
+                        <div class="role-box full"><span class="role-title">Cantina</span><span class="role-name">Julia / Isabelle</span></div>
                     </div>
-
                     <details>
                         <summary>Ver Ordem do Culto</summary>
                         <div class="culto-ordem">
@@ -525,52 +245,57 @@
                             <div class="step"><div class="step-num">3</div><div class="step-text">Palavra inicial</div></div>
                             <div class="step"><div class="step-num">4</div><div class="step-text">Breve oração</div></div>
                             <div class="step"><div class="step-num">5</div><div class="step-text">Oportunidade para saudação (5 min)</div></div>
-                            <div class="step"><div class="step-num">6</div><div class="step-text">Oportunidade para alguém louvar</div></div>
-                            <div class="step"><div class="step-num">7</div><div class="step-text">Oportunidade p/ conjuntos de outras igrejas</div></div>
-                            <div class="step"><div class="step-num">8</div><div class="step-text">Oportunidade Grupo de Louvor 1</div></div>
-                            <div class="step"><div class="step-num">9</div><div class="step-text">Oportunidade de saudação para 1 pessoa</div></div>
-                            <div class="step"><div class="step-num">10</div><div class="step-text">Pastor: Apresentação dos visitantes</div></div>
-                            <div class="step"><div class="step-num">11</div><div class="step-text">Louvor solo para colher as ofertas</div></div>
-                            <div class="step"><div class="step-num">12</div><div class="step-text">Oportunidade com Grupo de Louvor 2</div></div>
+                            <div class="step"><div class="step-num">6</div><div class="step-text">Oportunidade para louvar</div></div>
                             <div class="step"><div class="step-num">13</div><div class="step-text">Oração pelo pregador (João)</div></div>
                         </div>
                     </details>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Travar rolagem do body quando o menu lateral estiver aberto
+        const modal = document.getElementById('pwdModal');
+        const input = document.getElementById('inputSenha');
+
+        function abrirModal() {
+            document.getElementById('menu-toggle').checked = false;
+            modal.classList.add('active');
+            input.focus();
+        }
+
+        function fecharModal() {
+            modal.classList.remove('active');
+            input.value = '';
+        }
+
+        function confirmarSenha() {
+            if (input.value.toLowerCase() === "jesus") {
+                window.location.href = "ebd.html";
+            } else {
+                input.style.borderColor = "red";
+                input.placeholder = "Senha Incorreta!";
+                input.value = "";
+            }
+        }
+
+        // Permitir Enter
+        input.addEventListener("keyup", (e) => { if(e.key === "Enter") confirmarSenha(); });
+
+        // Scripts de UX originais
         const checkbox = document.getElementById('menu-toggle');
         checkbox.addEventListener('change', function() {
             document.body.style.overflow = this.checked ? 'hidden' : 'auto';
         });
 
-        // Efeito exclusivo: fechar o detalhe aberto caso o usuário clique em outro
         const detailsElements = document.querySelectorAll('details');
         detailsElements.forEach(targetDetail => {
             targetDetail.addEventListener('click', () => {
                 detailsElements.forEach(detail => {
-                    if (detail !== targetDetail) {
-                        detail.removeAttribute('open');
-                    }
+                    if (detail !== targetDetail) detail.removeAttribute('open');
                 });
             });
         });
-
-        function verificarSenha(event) {
-    event.preventDefault(); // Impede o navegador de abrir o link imediatamente
-    
-    const senha = prompt("Digite a senha para acessar o Ranking:");
-    
-    if (senha === "jesus") {
-        window.location.href = "ebd.html"; // Redireciona se a senha estiver correta
-    } else {
-        alert("Senha incorreta! Acesso negado.");
-    }
-}
     </script>
 </body>
 </html>
