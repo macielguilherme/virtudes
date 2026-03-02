@@ -1,361 +1,394 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Virtudes - Jovens</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Virtudes - Jovens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #09090b;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #18181b 0%, #09090b 80%);
+            --off-white: #ededf0;
+            --text-muted: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-hover: rgba(255, 255, 255, 0.06);
+            
+            /* Cores do Pódio Premium */
+            --gold-bg: rgba(250, 204, 21, 0.05);
+            --gold-border: rgba(250, 204, 21, 0.3);
+            --silver-bg: rgba(161, 161, 170, 0.05);
+            --silver-border: rgba(161, 161, 170, 0.3);
+            --bronze-bg: rgba(180, 83, 9, 0.05);
+            --bronze-border: rgba(180, 83, 9, 0.3);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+        body {
+            background-color: var(--bg-base);
+            background-image: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px 15px;
+            color: var(--off-white);
+        }
 
-/* Fundo animado preenchendo MUITO lentamente (120s) */
-body {
-    background: linear-gradient(-45deg, #0b2242, #7a0e19, #008ecc, #d91e26, #050b14);
-    background-size: 400% 400%;
-    animation: gradientBG 120s ease infinite;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 25px;
-    color: #fff;
-}
+        .container {
+            width: 100%;
+            max-width: 480px; /* Tamanho ideal para mobile/tablet */
+        }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        /* Glass Principal */
+        .glass {
+            background: var(--glass-bg);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
 
-.container {
-    width: 100%;
-    max-width: 500px;
-}
+        #titulo {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: -0.5px;
+            color: var(--off-white);
+            transition: all 0.3s ease;
+        }
 
-/* Glass principal */
-.glass {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    padding: 25px;
-    margin-bottom: 25px;
-}
+        .admin-active {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-#titulo {
-    text-align: center;
-    font-size: 1.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
+        /* Cards em Glass */
+        .card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
 
-.admin-active {
-    box-shadow: 0 0 25px rgba(0, 255, 153, 0.4);
-    border: 1px solid rgba(0, 255, 153, 0.5);
-}
+        .card:hover, .card:active {
+            background: var(--glass-hover);
+            transform: scale(0.98);
+        }
 
-/* Cards em Glass */
-.card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+        .card span {
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
 
-.card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+        .card strong {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--off-white);
+        }
 
-/* Cores do pódio em modo glass */
-.rank-1 { border: 1px solid rgba(255, 215, 0, 0.5); background: rgba(255, 215, 0, 0.1); }
-.rank-2 { border: 1px solid rgba(192, 192, 192, 0.4); background: rgba(192, 192, 192, 0.08); }
-.rank-3 { border: 1px solid rgba(205, 127, 50, 0.4); background: rgba(205, 127, 50, 0.08); }
+        /* Cores do pódio em modo dark */
+        .rank-1 { border-color: var(--gold-border); background: var(--gold-bg); }
+        .rank-2 { border-color: var(--silver-border); background: var(--silver-bg); }
+        .rank-3 { border-color: var(--bronze-border); background: var(--bronze-bg); }
 
-/* ===== MODAL ===== */
+        /* ===== MODAL ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Mobile: modal na parte de baixo */
+            z-index: 1000;
+            padding: 15px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
 
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(6px); /* Fundo embaçado atrás do modal */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-.hidden { display: none; }
+        .modal-content {
+            background: #18181b;
+            border: 1px solid var(--glass-border);
+            color: var(--off-white);
+            padding: 30px 20px;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.modal-content {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-    color: #fff;
-    padding: 30px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-    animation: fadeIn .3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+        .hidden .modal-content {
+            transform: translateY(100%);
+        }
 
-.modal-content h3 {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
+        .modal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
 
-@keyframes fadeIn {
-    from { transform: scale(.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
+        /* Botões rápidos */
+        .quick-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-/* Botões rápidos com efeito vidro */
-.quick-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 20px 0;
-}
+        .quick-buttons button {
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--off-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-.quick-buttons button {
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+        .quick-buttons button:hover, .quick-buttons button:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-.quick-buttons button:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-}
+        /* Input de texto */
+        .modal-content input {
+            width: 100%;
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--off-white);
+            font-size: 1.1rem;
+            outline: none;
+            transition: border 0.3s ease;
+            text-align: center;
+        }
 
-/* Input de texto translúcido */
-.modal-content input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(0, 0, 0, 0.2);
-    color: #fff;
-    margin-top: 5px;
-    font-size: 1.1rem;
-    outline: none;
-    transition: border 0.3s ease;
-}
+        .modal-content input::placeholder {
+            color: var(--text-muted);
+        }
 
-.modal-content input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
+        .modal-content input:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
 
-.modal-content input:focus {
-    border-color: rgba(255, 255, 255, 0.8);
-    background: rgba(0, 0, 0, 0.3);
-}
+        .modal-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+        }
 
-.modal-actions {
-    margin-top: 25px;
-    display: flex;
-    gap: 12px;
-}
+        .modal-actions button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.2s ease;
+        }
 
-.modal-actions button {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    color: white;
-    transition: all 0.3s ease;
-}
+        .confirm { 
+            background: var(--off-white); 
+            color: var(--bg-base); 
+        }
+        
+        .confirm:active { 
+            transform: scale(0.96); 
+            opacity: 0.9;
+        }
 
-.confirm { background: rgba(40, 167, 69, 0.5); }
-.confirm:hover { background: rgba(40, 167, 69, 0.7); transform: translateY(-2px); }
+        .cancel { 
+            background: transparent; 
+            border: 1px solid var(--glass-border) !important;
+            color: var(--off-white); 
+        }
 
-.cancel { background: rgba(220, 53, 69, 0.5); }
-.cancel:hover { background: rgba(220, 53, 69, 0.7); transform: translateY(-2px); }
-
-</style>
+        .cancel:active { 
+            background: rgba(255, 255, 255, 0.05); 
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-
-<div class="glass">
-<h2 id="titulo">Virtudes Jovens</h2>
-</div>
-
-<div id="ranking" class="glass"></div>
-
+    <div class="glass">
+        <h2 id="titulo">Virtudes Jovens</h2>
+    </div>
+    <div id="ranking" class="glass" style="padding: 15px;"></div>
 </div>
 
 <div id="modal" class="modal hidden">
-<div class="modal-content">
-<h3 id="modal-nome"></h3>
-
-<div class="quick-buttons">
-<button onclick="setValor(5)">+5</button>
-<button onclick="setValor(10)">+10</button>
-<button onclick="setValor(20)">+20</button>
-<button onclick="setValor(50)">+50</button>
-</div>
-
-<input type="number" id="valorCustom" placeholder="Outro valor">
-
-<div class="modal-actions">
-<button class="confirm" onclick="confirmarPontos()">Confirmar</button>
-<button class="cancel" onclick="fecharModal()">Cancelar</button>
-</div>
-</div>
+    <div class="modal-content">
+        <h3 id="modal-nome"></h3>
+        
+        <div class="quick-buttons">
+            <button onclick="setValor(5)">+5</button>
+            <button onclick="setValor(10)">+10</button>
+            <button onclick="setValor(20)">+20</button>
+            <button onclick="setValor(50)">+50</button>
+        </div>
+        
+        <input type="number" id="valorCustom" placeholder="Digitar outro valor">
+        
+        <div class="modal-actions">
+            <button class="cancel" onclick="fecharModal()">Cancelar</button>
+            <button class="confirm" onclick="confirmarPontos()">Confirmar</button>
+        </div>
+    </div>
 </div>
 
 <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+        authDomain: "ranking-jovens-d17d6.firebaseapp.com",
+        projectId: "ranking-jovens-d17d6",
+        storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
+        messagingSenderId: "523093300634",
+        appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
+    };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
-  authDomain: "ranking-jovens-d17d6.firebaseapp.com",
-  projectId: "ranking-jovens-d17d6",
-  storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
-  messagingSenderId: "523093300634",
-  appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
-};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const SENHA_ADMIN = "admin";
+    let modoAdmin = false;
+    let tempoPressionado;
+    let participanteAtual = null;
 
-const SENHA_ADMIN = "admin";
-let modoAdmin = false;
-let tempoPressionado;
-let participanteAtual = null;
+    const participantes = [
+        {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},{id:3,nome:'Flavia'},
+        {id:4,nome:'Julia'},{id:5,nome:'Geovana'},{id:6,nome:'João'},
+        {id:7,nome:'Pedro'},{id:8,nome:'Moises'},{id:9,nome:'Miguel'},
+        {id:10,nome:'Mariana'},{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
+        {id:13,nome:'Guilherme'}
+    ];
 
-const participantes = [
-{id:1,nome:'Ester'},{id:2,nome:'Isabelle'},
-{id:3,nome:'Flavia'},{id:4,nome:'Julia'},
-{id:5,nome:'Geovana'},{id:6,nome:'João'},
-{id:7,nome:'Pedro'},{id:8,nome:'Moises'},
-{id:9,nome:'Miguel'},{id:10,nome:'Mariana'},
-{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
-{id:13,nome:'Guilherme'}
-];
+    let transacoes = [];
 
-let transacoes = [];
+    const rankingDiv = document.getElementById("ranking");
+    const titulo = document.getElementById("titulo");
 
-const rankingDiv = document.getElementById("ranking");
-const titulo = document.getElementById("titulo");
+    /* ===== ADMIN ===== */
+    titulo.addEventListener("click", () => {
+        if(modoAdmin) return;
+        const senha = prompt("Senha admin:");
+        if(senha === SENHA_ADMIN) {
+            modoAdmin = true;
+            document.querySelector('.container .glass').classList.add("admin-active");
+            alert("Modo Admin Ativado");
+        }
+    });
 
-/* ===== ADMIN ===== */
-titulo.addEventListener("click",()=>{
-if(modoAdmin) return;
-const senha = prompt("Senha admin:");
-if(senha===SENHA_ADMIN){
-modoAdmin=true;
-rankingDiv.classList.add("admin-active");
-alert("Modo Admin Ativado");
-}
-});
+    titulo.addEventListener("mousedown", () => {
+        tempoPressionado = setTimeout(() => {
+            modoAdmin = false;
+            document.querySelector('.container .glass').classList.remove("admin-active");
+            alert("Modo Admin Desativado");
+        }, 2000);
+    });
+    titulo.addEventListener("mouseup", () => clearTimeout(tempoPressionado));
+    titulo.addEventListener("touchstart", () => {
+        tempoPressionado = setTimeout(() => {
+            modoAdmin = false;
+            document.querySelector('.container .glass').classList.remove("admin-active");
+            alert("Modo Admin Desativado");
+        }, 2000);
+    });
+    titulo.addEventListener("touchend", () => clearTimeout(tempoPressionado));
 
-titulo.addEventListener("mousedown",()=>{
-tempoPressionado=setTimeout(()=>{
-modoAdmin=false;
-rankingDiv.classList.remove("admin-active");
-alert("Modo Admin Desativado");
-},2000);
-});
-titulo.addEventListener("mouseup",()=>clearTimeout(tempoPressionado));
+    /* ===== RENDER ===== */
+    function render() {
+        const ranking = participantes.map(p => {
+            const soma = transacoes.filter(t => t.participante_id == p.id).reduce((a, b) => a + b.valor, 0);
+            return {...p, pontos: soma};
+        }).sort((a, b) => b.pontos - a.pontos);
 
-/* ===== RENDER ===== */
-function render(){
-const ranking=participantes.map(p=>{
-const soma=transacoes
-.filter(t=>t.participante_id==p.id)
-.reduce((a,b)=>a+b.valor,0);
-return {...p,pontos:soma};
-}).sort((a,b)=>b.pontos-a.pontos);
+        rankingDiv.innerHTML = ranking.map((p, i) => {
+            let cls = "";
+            if(i == 0) cls = "rank-1";
+            if(i == 1) cls = "rank-2";
+            if(i == 2) cls = "rank-3";
 
-rankingDiv.innerHTML=ranking.map((p,i)=>{
-let cls="";
-if(i==0)cls="rank-1";
-if(i==1)cls="rank-2";
-if(i==2)cls="rank-3";
+            return `
+                <div class="card ${cls}" onclick="adicionar(${p.id})">
+                    <span>${i + 1}º &nbsp;&nbsp; ${p.nome}</span>
+                    <strong>${p.pontos}</strong>
+                </div>
+            `;
+        }).join("");
+    }
 
-return `<div class="card ${cls}" onclick="adicionar(${p.id})">
-<span>${i+1}º  ${p.nome}</span>
-<strong>${p.pontos}</strong>
-</div>`;
-}).join("");
-}
+    /* ===== MODAL FUNÇÕES ===== */
+    window.adicionar = function(id) {
+        if(!modoAdmin) return;
+        participanteAtual = id;
+        const nome = participantes.find(p => p.id == id).nome;
+        document.getElementById("modal-nome").innerText = `Pontuar: ${nome}`;
+        document.getElementById("valorCustom").value = "";
+        document.getElementById("modal").classList.remove("hidden");
+    }
 
-/* ===== MODAL FUNÇÕES ===== */
+    window.setValor = function(valor) {
+        document.getElementById("valorCustom").value = valor;
+    }
 
-window.adicionar = function(id){
-if(!modoAdmin) return;
-participanteAtual=id;
-const nome=participantes.find(p=>p.id==id).nome;
-document.getElementById("modal-nome").innerText=nome;
-document.getElementById("valorCustom").value="";
-document.getElementById("modal").classList.remove("hidden");
-}
+    window.fecharModal = function() {
+        document.getElementById("modal").classList.add("hidden");
+    }
 
-window.setValor = function(valor){
-document.getElementById("valorCustom").value=valor;
-}
+    window.confirmarPontos = async function() {
+        const valor = parseInt(document.getElementById("valorCustom").value);
+        if(!valor) return;
 
-window.fecharModal = function(){
-document.getElementById("modal").classList.add("hidden");
-}
+        await addDoc(collection(db, "transacoes"), {
+            participante_id: participanteAtual,
+            valor: valor,
+            data: new Date()
+        });
 
-window.confirmarPontos = async function(){
-const valor=parseInt(document.getElementById("valorCustom").value);
-if(!valor) return;
+        fecharModal();
+    }
 
-await addDoc(collection(db,"transacoes"),{
-participante_id:participanteAtual,
-valor:valor,
-data:new Date()
-});
-
-fecharModal();
-}
-
-/* ===== FIRESTORE ===== */
-onSnapshot(collection(db,"transacoes"),(snapshot)=>{
-transacoes=snapshot.docs.map(doc=>doc.data());
-render();
-});
-
+    /* ===== FIRESTORE ===== */
+    onSnapshot(collection(db, "transacoes"), (snapshot) => {
+        transacoes = snapshot.docs.map(doc => doc.data());
+        render();
+    });
 </script>
 </body>
 </html>
