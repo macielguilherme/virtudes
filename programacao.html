@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Programação | Virtudes</title>
+    <title>Ranking EBD | Virtudes</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,16 +14,19 @@
         }
 
         :root {
-            --bg-primary: #050505;
-            --bg-secondary: #0A0A0A;
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #141414;
             --text-primary: #FFFFFF;
             --text-secondary: #A3A3A3;
             --accent-red: #ef4444;
-            --accent-glow: rgba(239, 68, 68, 0.15);
             --border-light: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.15);
-            --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-            --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --transition-smooth: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            
+            /* Pódio */
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #92400e;
         }
 
         body {
@@ -31,16 +34,15 @@
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            padding-top: 110px;
-            padding-bottom: 60px;
-            background-image: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.03) 0%, transparent 50%);
+            padding-top: 100px;
+            padding-bottom: 50px;
         }
 
         /* --- HEADER --- */
         .m3-header {
-            background-color: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             height: 80px;
             display: flex;
             align-items: center;
@@ -52,14 +54,14 @@
         }
 
         .brand-logo {
-            font-size: 1.4rem; font-weight: 800; letter-spacing: -1px;
+            font-size: 1.4rem; font-weight: 700; letter-spacing: -1px;
             text-decoration: none; color: var(--text-primary);
             order: 1;
         }
 
         #menu-toggle { display: none; }
-        .menu-icon-label { cursor: pointer; z-index: 3000; display: flex; flex-direction: column; gap: 6px; order: 2; padding: 10px 0; }
-        .line { width: 24px; height: 2px; background-color: var(--text-primary); transition: var(--transition-smooth); border-radius: 2px; }
+        .menu-icon-label { cursor: pointer; z-index: 3000; display: flex; flex-direction: column; gap: 7px; order: 2; }
+        .line { width: 22px; height: 1px; background-color: var(--text-primary); transition: var(--transition-smooth); }
         
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(2) { opacity: 0; }
@@ -71,317 +73,126 @@
             transition: var(--transition-smooth); border-left: 1px solid var(--border-light); z-index: 2000;
         }
         #menu-toggle:checked ~ .main-menu { right: 0; }
-        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
-        .main-menu a:hover { color: var(--accent-red); transform: translateX(5px); }
-        
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
+        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: 2.5px; transition: 0.3s; }
+        .main-menu a:hover { color: var(--accent-red); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
         #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
-        /* --- CONTAINER PRINCIPAL --- */
+        /* --- RANKING CONTAINER --- */
         .container {
             width: 90%;
-            max-width: 650px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
         .header-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
 
         .header-title h1 {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            letter-spacing: -0.03em;
-            background: linear-gradient(to right, #fff, #a3a3a3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            cursor: pointer; /* Indica que é clicável para o admin */
         }
 
         .header-title p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent-red);
-            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.3em;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
-        /* --- ANIMAÇÃO DE ENTRADA --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- LISTA DE PROGRAMAÇÃO --- */
-        .schedule-list {
+        /* --- CARDS --- */
+        .ranking-list {
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 12px;
         }
 
-        .event-item {
+        .card {
             background: var(--glass-bg);
             border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 20px;
             display: flex;
-            gap: 24px;
-            align-items: flex-start;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            animation: fadeInUp 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-        }
-
-        /* Delay em cascata para cada card */
-        .event-item:nth-child(1) { animation-delay: 0.1s; }
-        .event-item:nth-child(2) { animation-delay: 0.2s; }
-        .event-item:nth-child(3) { animation-delay: 0.3s; }
-        .event-item:nth-child(4) { animation-delay: 0.4s; }
-        .event-item:nth-child(5) { animation-delay: 0.5s; }
-        .event-item:nth-child(6) { animation-delay: 0.6s; }
-
-        .event-item:hover {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border-color: rgba(239, 68, 68, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5), 0 0 20px -5px var(--accent-glow);
-        }
-
-        /* Cor especial no hover de eventos normais */
-        .event-item.normal:hover { border-color: var(--border-hover); box-shadow: 0 15px 35px -10px rgba(0,0,0,0.5); }
-
-        .event-date {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--accent-red);
-            padding: 18px 20px;
-            border-radius: 18px;
-            text-align: center;
-            min-width: 95px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: inset 0 2px 10px rgba(255,255,255,0.05);
-        }
-
-        .event-date.recurrent {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .event-date span {
-            display: block;
-            font-size: 1.9rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-        }
-
-        .event-date small {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-        }
-
-        .event-details {
-            flex: 1;
-            width: 100%;
-        }
-
-        .event-details h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .event-details p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        /* --- TAGS --- */
-        .event-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .tag {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 6px 14px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .tag.time {
-            background: rgba(255, 255, 255, 0.9);
-            color: #000;
-            border-color: transparent;
-            font-weight: 700;
-        }
-
-        /* --- GRIDS DE ESCALA (UX APRIMORADA) --- */
-        .roles-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .role-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-light);
-            padding: 12px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .role-title {
-            font-size: 0.65rem;
-            color: var(--accent-red);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 800;
-        }
-
-        .role-name {
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .role-box.full { grid-column: span 2; } /* Para ocupar a linha toda */
-
-        /* --- DETALHES RETRÁTEIS (ACORDEÃO E TIMELINE) --- */
-        details {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 16px;
-            padding: 15px 18px;
-            border: 1px solid var(--border-light);
-            transition: var(--transition-smooth);
-        }
-
-        details[open] { border-color: rgba(239, 68, 68, 0.3); }
-
-        summary {
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-primary);
-            list-style: none;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            outline: none;
-        }
-
-        summary::-webkit-details-marker { display: none; }
-        summary::after { 
-            content: '+'; 
-            font-size: 1.4rem; 
-            font-weight: 400; 
-            color: var(--accent-red);
-            transition: var(--transition-smooth);
-        }
-        details[open] summary::after { transform: rotate(45deg); } /* Vira um X */
-
-        .culto-ordem {
-            margin-top: 20px;
-            padding-top: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-        }
-
-        /* A LINHA DO TEMPO VERTICAL */
-        .culto-ordem::before {
-            content: '';
-            position: absolute;
-            left: 13px; /* Centralizado com o círculo */
-            top: 10px;
-            bottom: 15px;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--accent-red) 0%, rgba(255,255,255,0.1) 100%);
-            z-index: 0;
-        }
-
-        .step {
-            display: flex;
-            gap: 15px;
             align-items: center;
-            position: relative;
-            z-index: 1;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .step-num {
-            background: var(--bg-primary);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 800;
-            min-width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            border: 2px solid var(--border-light);
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+        .card:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+
+        .rank-info { display: flex; align-items: center; gap: 15px; }
         
-        /* Destaque para os primeiros passos */
-        .step:nth-child(-n+3) .step-num { border-color: var(--accent-red); color: var(--accent-red); }
-
-        .step-text {
+        .pos {
+            font-weight: 800;
             font-size: 0.9rem;
             color: var(--text-secondary);
-            line-height: 1.4;
-            font-weight: 500;
+            min-width: 30px;
         }
 
-        /* --- RESPONSIVIDADE --- */
-        @media (max-width: 600px) {
-            .event-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-                padding: 20px;
-                border-radius: 20px;
-            }
+        .name {
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+        }
 
-            .event-date {
-                width: 100%;
-                flex-direction: row;
-                align-items: baseline;
-                gap: 8px;
-                padding: 12px 20px;
-                border-radius: 12px;
-            }
+        .points {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
 
-            .event-date span { margin-bottom: 0; font-size: 1.6rem; }
+        /* Estilos do Pódio */
+        .rank-0 { border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.05); }
+        .rank-0 .pos { color: var(--gold); }
+        .rank-1 { border-color: rgba(148, 163, 184, 0.4); background: rgba(148, 163, 184, 0.05); }
+        .rank-1 .pos { color: var(--silver); }
+        .rank-2 { border-color: rgba(146, 64, 14, 0.4); background: rgba(146, 64, 14, 0.05); }
+        .rank-2 .pos { color: var(--bronze); }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px); display: flex; justify-content: center;
+            align-items: flex-end; z-index: 5000; transition: opacity 0.3s ease;
+        }
+        .hidden { opacity: 0; pointer-events: none; }
+        .modal-content {
+            background: var(--bg-secondary); border: 1px solid var(--border-light);
+            width: 100%; max-width: 500px; border-radius: 32px 32px 0 0;
+            padding: 40px 30px; transform: translateY(0); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .hidden .modal-content { transform: translateY(100%); }
+
+        .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 25px 0; }
+        .btn-q { 
+            background: var(--glass-bg); border: 1px solid var(--border-light); 
+            color: white; padding: 15px 5px; border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-q:active { background: var(--accent-red); border-color: var(--accent-red); }
+
+        input[type="number"] {
+            width: 100%; padding: 20px; border-radius: 15px; background: #000;
+            border: 1px solid var(--border-light); color: white; text-align: center; font-size: 1.2rem; outline: none;
+        }
+
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .btn-save { background: white; color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-save:active { transform: scale(0.98); }
+        .btn-cancel { background: transparent; color: white; border: 1px solid var(--border-light); padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.2s; }
+        .btn-cancel:active { background: rgba(255,255,255,0.1); }
+
+        .admin-status {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-red); font-size: 10px; padding: 6px 16px;
+            border-radius: 20px; text-transform: uppercase; font-weight: 800;
+            display: none; z-index: 900; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
     </style>
 </head>
@@ -389,7 +200,6 @@
 
     <header class="m3-header">
         <input type="checkbox" id="menu-toggle">
-        
         <a href="index.html" class="brand-logo">Virtudes</a>
         
         <label for="menu-toggle" class="menu-icon-label">
@@ -402,163 +212,159 @@
         
         <nav class="main-menu">
             <a href="index.html">Início</a>
-            <a href="ebd.html">Ranking da EBD</a>
-            <a href="programacao.html" style="color: var(--accent-red);">Programação</a>
+            <a href="ebd.html" style="color: var(--accent-red);">Ranking da EBD</a>
+            <a href="programacao.html">Programação</a>
         </nav>
     </header>
 
     <div class="container">
         <div class="header-title">
-            <p>Fique por dentro</p>
-            <h1>NOSSA PROGRAMAÇÃO</h1>
+            <p>Escola Bíblica Dominical</p>
+            <h1 id="titulo" title="Clique aqui para acessar o modo Admin">RANKING GERAL</h1>
         </div>
 
-        <div class="schedule-list">
+        <div id="ranking" class="ranking-list">
+            </div>
+    </div>
+
+    <div id="admin-indicator" class="admin-status">Modo Admin Ativo</div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modal-nome" style="text-align: center; margin-bottom: 5px;">Nome do Aluno</h3>
+            <p style="text-align: center; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">Adicionar Pontuação</p>
             
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>08</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
+            <input type="number" id="valorCustom" placeholder="00">
+
+            <div class="quick-grid">
+                <button class="btn-q" onclick="setValor(5)">+5</button>
+                <button class="btn-q" onclick="setValor(10)">+10</button>
+                <button class="btn-q" onclick="setValor(20)">+20</button>
+                <button class="btn-q" onclick="setValor(50)">+50</button>
             </div>
-
-            <div class="event-item">
-                <div class="event-date">
-                    <span>14</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Noite da Pizza</h3>
-                    <p>Nosso momento de descontração, comunhão e muitos jogos. Traga sua alegria!</p>
-                </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="fecharModal()">Voltar</button>
+                <button class="btn-save" onclick="confirmarPontos()">Salvar Pontos</button>
             </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>15</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>22</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>29</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item">
-                <div class="event-date">
-                    <span>18</span>
-                    <small>Abril</small>
-                </div>
-                <div class="event-details">
-                    <h3>Culto de Jovens</h3>
-                    
-                    <div class="roles-grid">
-                        <div class="role-box">
-                            <span class="role-title">Direção</span>
-                            <span class="role-name">Isabelle</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Pregação</span>
-                            <span class="role-name">João</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Hino Harpa</span>
-                            <span class="role-name">Flávia</span>
-                        </div>
-                        <div class="role-box">
-                            <span class="role-title">Portaria</span>
-                            <span class="role-name">Pedro</span>
-                        </div>
-                        <div class="role-box full">
-                            <span class="role-title">Cantina</span>
-                            <span class="role-name">Julia / Isabelle</span>
-                        </div>
-                    </div>
-
-                    <details>
-                        <summary>Ver Ordem do Culto</summary>
-                        <div class="culto-ordem">
-                            <div class="step"><div class="step-num">1</div><div class="step-text">Início do culto com oração</div></div>
-                            <div class="step"><div class="step-num">2</div><div class="step-text">02 Hinos da Harpa</div></div>
-                            <div class="step"><div class="step-num">3</div><div class="step-text">Palavra inicial</div></div>
-                            <div class="step"><div class="step-num">4</div><div class="step-text">Breve oração</div></div>
-                            <div class="step"><div class="step-num">5</div><div class="step-text">Oportunidade para saudação (5 min)</div></div>
-                            <div class="step"><div class="step-num">6</div><div class="step-text">Oportunidade para alguém louvar</div></div>
-                            <div class="step"><div class="step-num">7</div><div class="step-text">Oportunidade p/ conjuntos de outras igrejas</div></div>
-                            <div class="step"><div class="step-num">8</div><div class="step-text">Oportunidade Grupo de Louvor 1</div></div>
-                            <div class="step"><div class="step-num">9</div><div class="step-text">Oportunidade de saudação para 1 pessoa</div></div>
-                            <div class="step"><div class="step-num">10</div><div class="step-text">Pastor: Apresentação dos visitantes</div></div>
-                            <div class="step"><div class="step-num">11</div><div class="step-text">Louvor solo para colher as ofertas</div></div>
-                            <div class="step"><div class="step-num">12</div><div class="step-text">Oportunidade com Grupo de Louvor 2</div></div>
-                            <div class="step"><div class="step-num">13</div><div class="step-text">Oração pelo pregador (João)</div></div>
-                        </div>
-                    </details>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <script>
-        // Travar rolagem do body quando o menu lateral estiver aberto
-        const checkbox = document.getElementById('menu-toggle');
-        checkbox.addEventListener('change', function() {
-            document.body.style.overflow = this.checked ? 'hidden' : 'auto';
-        });
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Efeito exclusivo: fechar o detalhe aberto caso o usuário clique em outro
-        const detailsElements = document.querySelectorAll('details');
-        detailsElements.forEach(targetDetail => {
-            targetDetail.addEventListener('click', () => {
-                detailsElements.forEach(detail => {
-                    if (detail !== targetDetail) {
-                        detail.removeAttribute('open');
-                    }
-                });
+    const firebaseConfig = {
+        apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+        authDomain: "ranking-jovens-d17d6.firebaseapp.com",
+        projectId: "ranking-jovens-d17d6",
+        storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
+        messagingSenderId: "523093300634",
+        appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const SENHA_ADMIN = "jesus";
+    let modoAdmin = false;
+    let participanteAtual = null;
+    let transacoes = [];
+
+    const participantes = [
+        {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},{id:3,nome:'Flavia'},
+        {id:4,nome:'Julia'},{id:5,nome:'Geovana'},{id:6,nome:'João'},
+        {id:7,nome:'Pedro'},{id:8,nome:'Moises'},{id:9,nome:'Miguel'},
+        {id:10,nome:'Mariana'},{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
+        {id:13,nome:'Guilherme'}
+    ];
+
+    const rankingDiv = document.getElementById("ranking");
+    const titulo = document.getElementById("titulo");
+    const indicator = document.getElementById("admin-indicator");
+
+    // Travar rolagem do body quando o menu lateral estiver aberto
+    const checkbox = document.getElementById('menu-toggle');
+    checkbox.addEventListener('change', function() {
+        document.body.style.overflow = this.checked ? 'hidden' : 'auto';
+    });
+
+    // Ativa Admin
+    titulo.addEventListener("click", () => {
+        if(modoAdmin) {
+            modoAdmin = false;
+            indicator.style.display = "none";
+            return;
+        }
+        const senha = prompt("Senha para ativar Modo Admin:");
+        if(senha === SENHA_ADMIN) {
+            modoAdmin = true;
+            indicator.style.display = "block";
+        } else if(senha !== null) {
+            alert("Senha incorreta!");
+        }
+    });
+
+    function render() {
+        const ranking = participantes.map(p => {
+            const soma = transacoes.filter(t => t.participante_id == p.id).reduce((a, b) => a + b.valor, 0);
+            return {...p, pontos: soma};
+        }).sort((a, b) => b.pontos - a.pontos);
+
+        rankingDiv.innerHTML = ranking.map((p, i) => `
+            <div class="card rank-${i}" onclick="adicionar(${p.id})">
+                <div class="rank-info">
+                    <span class="pos">${i + 1}º</span>
+                    <span class="name">${p.nome}</span>
+                </div>
+                <strong class="points">${p.pontos}</strong>
+            </div>
+        `).join("");
+    }
+
+    window.adicionar = function(id) {
+        if(!modoAdmin) return;
+        participanteAtual = id;
+        document.getElementById("modal-nome").innerText = participantes.find(p => p.id == id).nome;
+        document.getElementById("valorCustom").value = ""; // Limpa o input sempre que abrir
+        document.getElementById("modal").classList.remove("hidden");
+        document.body.style.overflow = 'hidden';
+    }
+
+    window.setValor = (v) => document.getElementById("valorCustom").value = v;
+    window.fecharModal = () => {
+        document.getElementById("modal").classList.add("hidden");
+        document.body.style.overflow = 'auto';
+    }
+
+    window.confirmarPontos = async function() {
+        const valor = parseInt(document.getElementById("valorCustom").value);
+        if(!valor) return;
+        
+        // Mudar o texto do botão para dar feedback visual
+        const btnSave = document.querySelector('.btn-save');
+        const textoOriginal = btnSave.innerText;
+        btnSave.innerText = "Salvando...";
+        
+        try {
+            await addDoc(collection(db, "transacoes"), {
+                participante_id: participanteAtual,
+                valor: valor,
+                data: new Date()
             });
-        });
-    </script>
+            fecharModal();
+        } catch (e) {
+            console.error("Erro ao adicionar documento: ", e);
+            alert("Erro ao salvar pontos. Tente novamente.");
+        } finally {
+            btnSave.innerText = textoOriginal;
+        }
+    }
+
+    onSnapshot(collection(db, "transacoes"), (snapshot) => {
+        transacoes = snapshot.docs.map(doc => doc.data());
+        render();
+    });
+</script>
 </body>
 </html>
