@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ranking EBD | Virtudes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ranking EBD | Virtudes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -387,158 +387,184 @@
     </style>
 </head>
 <body>
-    <header class="m3-header">
-        <input type="checkbox" id="menu-toggle">
-        <a href="index.html" class="brand-logo">Virtudes</a>
-        
-        <label for="menu-toggle" class="menu-icon-label">
-            <div class="line"></div><div class="line"></div><div class="line"></div>
-        </label>
-        
-        <label for="menu-toggle" class="menu-overlay"></label>
-        
-        <nav class="main-menu">
-            <a href="index.html">Início</a>
-            <a href="ebd.html" style="color: var(--accent-red);">Ranking da EBD</a>
-            <a href="programacao.html">Programação</a>
-        </nav>
-    </header>
+<header class="m3-header">
+    <input type="checkbox" id="menu-toggle">
+    <a href="index.html" class="brand-logo">Virtudes</a>
+    <label for="menu-toggle" class="menu-icon-label">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+    </label>
+    <label for="menu-toggle" class="menu-overlay"></label>
+    <nav class="main-menu">
+        <a href="index.html">Início</a>
+        <a href="ebd.html" style="color: var(--accent-red);">Ranking da EBD</a>
+        <a href="programacao.html">Programação</a>
+    </nav>
+</header>
 
-    <div class="container">
-        <div class="header-title">
-            <p>Escola Bíblica Dominical</p>
-            <h1 id="titulo">RANKING GERAL</h1>
+<div class="container">
+    <div class="header-title">
+        <p>Escola Bíblica Dominical</p>
+        <h1 id="titulo">RANKING GERAL</h1>
+    </div>
+    <div id="ranking" class="ranking-list"></div>
+</div>
+
+<div id="admin-indicator" class="admin-status">Modo Admin Ativo</div>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 id="modal-nome">Nome do Aluno</h3>
+        <p>Adicionar Pontuação</p>
+        <input type="number" id="valorCustom" placeholder="00">
+        <div class="quick-grid">
+            <button class="btn-q" onclick="setValor(5)">+5</button>
+            <button class="btn-q" onclick="setValor(10)">+10</button>
+            <button class="btn-q" onclick="setValor(20)">+20</button>
+            <button class="btn-q" onclick="setValor(50)">+50</button>
         </div>
-
-        <div id="ranking" class="ranking-list">
-            <!-- Cards serão inseridos via JavaScript -->
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="fecharModal()">Voltar</button>
+            <button class="btn-save" onclick="confirmarPontos()">Salvar Pontos</button>
         </div>
     </div>
+</div>
 
-    <div id="admin-indicator" class="admin-status">Modo Admin Ativo</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <h3 id="modal-nome">Nome do Aluno</h3>
-            <p>Adicionar Pontuação</p>
-            
-            <input type="number" id="valorCustom" placeholder="00">
-            
-            <div class="quick-grid">
-                <button class="btn-q" onclick="setValor(5)">+5</button>
-                <button class="btn-q" onclick="setValor(10)">+10</button>
-                <button class="btn-q" onclick="setValor(20)">+20</button>
-                <button class="btn-q" onclick="setValor(50)">+50</button>
+const firebaseConfig = {
+    apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+    authDomain: "ranking-jovens-d17d6.firebaseapp.com",
+    projectId: "ranking-jovens-d17d6",
+    storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
+    messagingSenderId: "523093300634",
+    appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let modoAdmin = false;
+let participanteAtual = null;
+let transacoes = [];
+
+const participantes = [
+    {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},{id:3,nome:'Flavia'},
+    {id:4,nome:'Julia'},{id:5,nome:'Geovana'},{id:6,nome:'João'},
+    {id:7,nome:'Pedro'},{id:8,nome:'Moises'},{id:9,nome:'Miguel'},
+    {id:10,nome:'Mariana'},{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
+    {id:13,nome:'Guilherme'}
+];
+
+const rankingDiv = document.getElementById("ranking");
+const titulo = document.getElementById("titulo");
+const indicator = document.getElementById("admin-indicator");
+const checkbox = document.getElementById('menu-toggle');
+
+// Travar rolagem do body quando o menu lateral estiver aberto
+checkbox.addEventListener('change', function() {
+    document.body.style.overflow = this.checked ? 'hidden' : 'auto';
+});
+
+// --- HASH DA SENHA ---
+async function hashSenha(senha) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(senha);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// --- CRIAR OU ATUALIZAR SENHA ---
+async function criarOuAtualizarSenha(novaSenha) {
+    const hash = await hashSenha(novaSenha);
+    await setDoc(doc(db, "config", "admin"), { senha_hash: hash });
+    alert("Senha configurada com sucesso!");
+}
+
+// --- CHECAR SENHA ---
+async function checarSenha(senhaDigitada) {
+    const docSnap = await getDoc(doc(db, "config", "admin"));
+    if (!docSnap.exists() || !docSnap.data().senha_hash) return false;
+    const hashDigitado = await hashSenha(senhaDigitada);
+    return hashDigitado === docSnap.data().senha_hash;
+}
+
+// --- LOGIN ADMIN ---
+titulo.addEventListener("click", async () => {
+    const docSnap = await getDoc(doc(db, "config", "admin"));
+
+    if (!docSnap.exists() || !docSnap.data().senha_hash) {
+        // Primeira vez: criar senha
+        const nova = prompt("Configure a senha do Admin:");
+        if (!nova) return;
+        await criarOuAtualizarSenha(nova);
+        modoAdmin = true;
+        indicator.style.display = "block";
+        return;
+    }
+
+    // Senha já existe: login
+    const senha = prompt("Senha Admin:");
+    if (!senha) return;
+    const ok = await checarSenha(senha);
+    if(ok){
+        modoAdmin = true;
+        indicator.style.display = "block";
+    } else {
+        alert("Senha incorreta!");
+    }
+});
+
+// --- RENDER ---
+function render() {
+    const ranking = participantes.map(p => {
+        const soma = transacoes.filter(t => t.participante_id == p.id).reduce((a,b)=>a+b.valor,0);
+        return {...p, pontos: soma};
+    }).sort((a,b)=>b.pontos - a.pontos);
+
+    rankingDiv.innerHTML = ranking.map((p,i)=>`
+        <div class="card rank-${i}" onclick="window.adicionar(${p.id})" style="animation-delay: ${0.1 + i*0.05}s">
+            <div class="rank-info">
+                <span class="pos">${i+1}º</span>
+                <span class="name">${p.nome}</span>
             </div>
-            
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="fecharModal()">Voltar</button>
-                <button class="btn-save" onclick="confirmarPontos()">Salvar Pontos</button>
-            </div>
+            <strong class="points">${p.pontos}</strong>
         </div>
-    </div>
+    `).join("");
+}
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// --- MODAL ---
+window.adicionar = function(id) {
+    if(!modoAdmin) return;
+    participanteAtual = id;
+    document.getElementById("modal-nome").innerText = participantes.find(p=>p.id==id).nome;
+    document.getElementById("modal").classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+window.setValor = (v) => document.getElementById("valorCustom").value = v;
+window.fecharModal = () => {
+    document.getElementById("modal").classList.add("hidden");
+    document.getElementById("valorCustom").value = '';
+    document.body.style.overflow = 'auto';
+}
+window.confirmarPontos = async function() {
+    const valor = parseInt(document.getElementById("valorCustom").value);
+    if(!valor) return;
+    await addDoc(collection(db, "transacoes"), {
+        participante_id: participanteAtual,
+        valor: valor,
+        data: new Date()
+    });
+    fecharModal();
+}
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
-            authDomain: "ranking-jovens-d17d6.firebaseapp.com",
-            projectId: "ranking-jovens-d17d6",
-            storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
-            messagingSenderId: "523093300634",
-            appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const SENHA_ADMIN = "admin";
-        let modoAdmin = false;
-        let participanteAtual = null;
-        let transacoes = [];
-
-        const participantes = [
-            {id:1,nome:'Ester'},{id:2,nome:'Isabelle'},{id:3,nome:'Flavia'},
-            {id:4,nome:'Julia'},{id:5,nome:'Geovana'},{id:6,nome:'João'},
-            {id:7,nome:'Pedro'},{id:8,nome:'Moises'},{id:9,nome:'Miguel'},
-            {id:10,nome:'Mariana'},{id:11,nome:'Mateus'},{id:12,nome:'Davi'},
-            {id:13,nome:'Guilherme'}
-        ];
-
-        const rankingDiv = document.getElementById("ranking");
-        const titulo = document.getElementById("titulo");
-        const indicator = document.getElementById("admin-indicator");
-        const checkbox = document.getElementById('menu-toggle');
-
-        // Travar rolagem do body quando o menu lateral estiver aberto
-        checkbox.addEventListener('change', function() {
-            document.body.style.overflow = this.checked ? 'hidden' : 'auto';
-        });
-
-        // Ativa Admin
-        titulo.addEventListener("click", () => {
-            if(modoAdmin) {
-                modoAdmin = false;
-                indicator.style.display = "none";
-                return;
-            }
-            const senha = prompt("Senha:");
-            if(senha === SENHA_ADMIN) {
-                modoAdmin = true;
-                indicator.style.display = "block";
-            }
-        });
-
-        function render() {
-            const ranking = participantes.map(p => {
-                const soma = transacoes.filter(t => t.participante_id == p.id).reduce((a, b) => a + b.valor, 0);
-                return {...p, pontos: soma};
-            }).sort((a, b) => b.pontos - a.pontos);
-
-            rankingDiv.innerHTML = ranking.map((p, i) => `
-                <div class="card rank-${i}" onclick="window.adicionar(${p.id})" style="animation-delay: ${0.1 + (i * 0.05)}s">
-                    <div class="rank-info">
-                        <span class="pos">${i + 1}º</span>
-                        <span class="name">${p.nome}</span>
-                    </div>
-                    <strong class="points">${p.pontos}</strong>
-                </div>
-            `).join("");
-        }
-
-        window.adicionar = function(id) {
-            if(!modoAdmin) return;
-            participanteAtual = id;
-            document.getElementById("modal-nome").innerText = participantes.find(p => p.id == id).nome;
-            document.getElementById("modal").classList.remove("hidden");
-            document.body.style.overflow = 'hidden';
-        }
-
-        window.setValor = (v) => document.getElementById("valorCustom").value = v;
-        
-        window.fecharModal = () => {
-            document.getElementById("modal").classList.add("hidden");
-            document.getElementById("valorCustom").value = '';
-            document.body.style.overflow = 'auto';
-        }
-
-        window.confirmarPontos = async function() {
-            const valor = parseInt(document.getElementById("valorCustom").value);
-            if(!valor) return;
-            await addDoc(collection(db, "transacoes"), {
-                participante_id: participanteAtual,
-                valor: valor,
-                data: new Date()
-            });
-            fecharModal();
-        }
-
-        onSnapshot(collection(db, "transacoes"), (snapshot) => {
-            transacoes = snapshot.docs.map(doc => doc.data());
-            render();
-        });
-    </script>
+// --- FIRESTORE LISTENER ---
+onSnapshot(collection(db, "transacoes"), snapshot=>{
+    transacoes = snapshot.docs.map(doc=>doc.data());
+    render();
+});
+</script>
 </body>
 </html>
