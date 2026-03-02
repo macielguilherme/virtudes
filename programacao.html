@@ -114,7 +114,7 @@
             padding: 25px;
             display: flex;
             gap: 25px;
-            align-items: center;
+            align-items: flex-start;
             transition: var(--transition-smooth);
         }
 
@@ -130,10 +130,16 @@
             padding: 15px 20px;
             border-radius: 16px;
             text-align: center;
-            min-width: 90px;
+            min-width: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .event-date.recurrent {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
         }
 
         .event-date span {
@@ -153,6 +159,7 @@
 
         .event-details {
             flex: 1;
+            width: 100%;
         }
 
         .event-details h3 {
@@ -169,10 +176,22 @@
             margin-bottom: 12px;
         }
 
+        .role-list {
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .role-list span b { color: var(--text-primary); font-weight: 600; }
+
         .event-tags {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 10px;
         }
 
         .tag {
@@ -191,6 +210,66 @@
             background: var(--text-primary);
             color: var(--bg-primary);
             border-color: transparent;
+        }
+
+        /* --- DETALHES RETRÁTEIS (ACORDEÃO) --- */
+        details {
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid var(--border-light);
+        }
+
+        summary {
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-red);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; font-size: 1.4rem; font-weight: 400; }
+        details[open] summary::after { content: '-'; }
+
+        .culto-ordem {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            min-width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .step-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         /* --- RESPONSIVIDADE --- */
@@ -214,6 +293,8 @@
                 margin-bottom: 0;
                 font-size: 1.4rem;
             }
+
+            .role-list { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -248,47 +329,67 @@
         <div class="schedule-list">
             
             <div class="event-item">
+                <div class="event-date recurrent">
+                    <span>DOM</span>
+                    <small>Fixo</small>
+                </div>
+                <div class="event-details">
+                    <h3>Domingo de Manhã</h3>
+                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
+                    <div class="event-tags">
+                        <span class="tag time">08:30h</span> <span class="tag">Consagração</span>
+                    </div>
+                    <div class="event-tags">
+                        <span class="tag time">09:30h</span> <span class="tag">EBD (Escola Bíblica)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item">
                 <div class="event-date">
                     <span>14</span>
                     <small>Março</small>
                 </div>
                 <div class="event-details">
                     <h3>Noite da Pizza</h3>
-                    <p>Um momento especial de comunhão e jogos para toda a juventude. Traga um amigo!</p>
-                    <div class="event-tags">
-                        <span class="tag time">16:00h</span>
-                        <span class="tag">Igreja Local</span>
-                    </div>
+                    <p>Nosso momento de descontração, comunhão e muitos jogos!</p>
                 </div>
             </div>
 
             <div class="event-item">
                 <div class="event-date">
-                    <span>16</span>
-                    <small>Março</small>
+                    <span>18</span>
+                    <small>Abril</small>
                 </div>
                 <div class="event-details">
-                    <h3>Escola Bíblica Dominical</h3>
-                    <p>Estudo aprofundado da palavra. Não esqueça de trazer sua Bíblia e revista.</p>
-                    <div class="event-tags">
-                        <span class="tag time">09:00h</span>
-                        <span class="tag">Sala dos Jovens</span>
+                    <h3>Culto de Jovens</h3>
+                    
+                    <div class="role-list">
+                        <span><b>Direção:</b> Isabelle</span>
+                        <span><b>Pregação:</b> João</span>
+                        <span><b>Harpa:</b> Flávia</span>
+                        <span><b>Portaria:</b> Pedro</span>
+                        <span><b>Cantina:</b> Julia / Isabelle</span>
                     </div>
-                </div>
-            </div>
 
-            <div class="event-item">
-                <div class="event-date">
-                    <span>22</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Culto de Jovens "Virtudes"</h3>
-                    <p>Nosso encontro mensal de adoração e busca com toda a juventude reunida.</p>
-                    <div class="event-tags">
-                        <span class="tag time">19:30h</span>
-                        <span class="tag">Templo Principal</span>
-                    </div>
+                    <details>
+                        <summary>Ver Ordem do Culto</summary>
+                        <div class="culto-ordem">
+                            <div class="step"><div class="step-num">1</div><div class="step-text">Início do culto com oração</div></div>
+                            <div class="step"><div class="step-num">2</div><div class="step-text">02 Hinos da Harpa</div></div>
+                            <div class="step"><div class="step-num">3</div><div class="step-text">Palavra inicial</div></div>
+                            <div class="step"><div class="step-num">4</div><div class="step-text">Breve oração</div></div>
+                            <div class="step"><div class="step-num">5</div><div class="step-text">Oportunidade para saudação (5 min)</div></div>
+                            <div class="step"><div class="step-num">6</div><div class="step-text">Oportunidade para alguém louvar</div></div>
+                            <div class="step"><div class="step-num">7</div><div class="step-text">Oportunidade p/ conjuntos de outras igrejas</div></div>
+                            <div class="step"><div class="step-num">8</div><div class="step-text">Oportunidade Grupo de Louvor 1</div></div>
+                            <div class="step"><div class="step-num">9</div><div class="step-text">Oportunidade de saudação para 1 pessoa</div></div>
+                            <div class="step"><div class="step-num">10</div><div class="step-text">Pastor: Apresentação dos visitantes</div></div>
+                            <div class="step"><div class="step-num">11</div><div class="step-text">Louvor solo para colher as ofertas</div></div>
+                            <div class="step"><div class="step-num">12</div><div class="step-text">Oportunidade com Grupo de Louvor 2</div></div>
+                            <div class="step"><div class="step-num">13</div><div class="step-text">Oração pelo pregador (João)</div></div>
+                        </div>
+                    </details>
                 </div>
             </div>
 
