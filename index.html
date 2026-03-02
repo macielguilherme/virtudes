@@ -30,7 +30,7 @@
             min-height: 100vh;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER (AJUSTADO PARA MENU NA ESQUERDA) --- */
         .m3-header {
             background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(15px);
@@ -45,6 +45,8 @@
             top: 0;
             width: 100%;
             z-index: 1000;
+            /* Inverte a ordem visual: Itens da esquerda vão para a direita e vice-versa */
+            flex-direction: row-reverse; 
         }
 
         .brand-logo {
@@ -55,20 +57,73 @@
             color: var(--text-primary);
         }
 
-        /* --- MENU --- */
+        /* --- MENU HAMBURGUER --- */
         #menu-toggle { display: none; }
-        .menu-icon-label { cursor: pointer; z-index: 3000; display: flex; flex-direction: column; gap: 7px; }
-        .line { width: 22px; height: 1px; background-color: var(--text-primary); transition: var(--transition-smooth); }
         
-        .main-menu {
-            position: fixed; top: 0; right: -100%; width: 70%; max-width: 350px; height: 100vh;
-            background: #000; display: flex; flex-direction: column; padding: 140px 40px; gap: 35px;
-            transition: var(--transition-smooth); border-left: 1px solid var(--border-light); z-index: 2000;
+        .menu-icon-label { 
+            cursor: pointer; 
+            z-index: 3000; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 7px; 
+            padding: 10px 0;
         }
-        #menu-toggle:checked ~ .main-menu { right: 0; }
-        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: 2.5px; }
+        
+        .line { 
+            width: 22px; 
+            height: 1px; 
+            background-color: var(--text-primary); 
+            transition: var(--transition-smooth); 
+        }
 
-        /* --- LAYOUT INVERTIDO (TEXTO ESQUERDA, IMAGEM DIREITA) --- */
+        /* Animação do X no hamburguer */
+        #menu-toggle:checked ~ .menu-icon-label .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        #menu-toggle:checked ~ .menu-icon-label .line:nth-child(2) { opacity: 0; }
+        #menu-toggle:checked ~ .menu-icon-label .line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        
+        /* Menu Lateral abrindo da ESQUERDA */
+        .main-menu {
+            position: fixed; 
+            top: 0; 
+            left: -100%; /* Escondido à esquerda */
+            width: 75%; 
+            max-width: 350px; 
+            height: 100vh;
+            background: #000; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 140px 40px; 
+            gap: 35px;
+            transition: var(--transition-smooth); 
+            border-right: 1px solid var(--border-light); 
+            z-index: 2000;
+        }
+
+        #menu-toggle:checked ~ .main-menu { left: 0; }
+
+        .main-menu a { 
+            color: var(--text-secondary); 
+            text-decoration: none; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 2.5px; 
+            transition: 0.3s;
+        }
+
+        .main-menu a:hover { color: var(--accent-red); }
+
+        .menu-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.8); 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: var(--transition-smooth); 
+            z-index: 1500; 
+        }
+        #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* --- LAYOUT CONTEÚDO --- */
         .informe-container {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -84,10 +139,9 @@
             gap: 30px;
             max-width: 1200px;
             width: 100%;
-            align-items: stretch; /* Garante alturas iguais */
+            align-items: stretch;
         }
 
-        /* Lado do Texto (Agora na Esquerda no Desktop) */
         .details-side {
             flex: 1 1 450px;
             background: rgba(255, 255, 255, 0.03);
@@ -101,14 +155,13 @@
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-            order: 1; /* Primeiro no desktop */
+            order: 1;
         }
 
-        /* Lado da Imagem (Agora na Direita no Desktop) */
         .image-side {
             flex: 1 1 480px;
             display: flex;
-            order: 2; /* Segundo no desktop */
+            order: 2;
         }
 
         .informe-img {
@@ -180,7 +233,7 @@
             opacity: 0.02;
             position: absolute;
             bottom: -5px;
-            left: 20px; /* Movido para esquerda para equilibrar com o layout */
+            left: 20px;
             text-transform: uppercase;
             pointer-events: none;
             user-select: none;
@@ -189,7 +242,7 @@
         /* --- RESPONSIVIDADE --- */
         @media (max-width: 968px) {
             .details-side { 
-                order: 2; /* No celular, a imagem volta a ficar em cima do texto */
+                order: 2; 
                 padding: 40px 25px; 
                 min-height: auto;
             }
@@ -197,22 +250,23 @@
             .informe-container { padding: 40px 20px; }
             .event-card h1 { font-size: 2rem; }
         }
-
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
-        #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
     </style>
 </head>
 <body>
 
     <header class="m3-header">
         <input type="checkbox" id="menu-toggle">
-        <div class="nav-container-wrapper">
-            <a href="#" class="brand-logo">Virtudes</a>
-            <label for="menu-toggle" class="menu-icon-label">
-                <div class="line"></div><div class="line"></div><div class="line"></div>
-            </label>
-        </div>
+        
+        <a href="#" class="brand-logo">Virtudes</a>
+
+        <label for="menu-toggle" class="menu-icon-label">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </label>
+
         <label for="menu-toggle" class="menu-overlay"></label>
+
         <nav class="main-menu">
             <a href="ebd.html">Ranking da EBD</a>
             <a href="#">Programação</a>
@@ -261,6 +315,7 @@
     <script>
         const checkbox = document.getElementById('menu-toggle');
         checkbox.addEventListener('change', function() {
+            // Trava o scroll do site quando o menu está aberto
             document.body.style.overflow = this.checked ? 'hidden' : 'auto';
         });
     </script>
