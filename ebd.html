@@ -622,11 +622,20 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    onSnapshot, 
+    doc, 
+    getDoc, 
+    setDoc,
+    updateDoc,
+    arrayUnion 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Configuração do Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+    apiKey: "SUA_API_KEY",
     authDomain: "ranking-jovens-d17d6.firebaseapp.com",
     projectId: "ranking-jovens-d17d6",
     storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
@@ -634,111 +643,20 @@ const firebaseConfig = {
     appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Estado da aplicação
 let modoAdmin = false;
-let participanteAtual = null;
-let transacoes = [];
 let isFirstAccess = false;
-let categoriaSelecionada = 'geral';
 
-// Categorias de pontuação
-const categorias = [
-    { id: 'quiz', nome: 'Quiz', pontos: 5, desc: 'Participar do quiz' },
-    { id: 'pergunta_biblica', nome: 'Pergunta Bíblica', pontos: 20, desc: 'Criar pergunta (se ninguém acertar)' },
-    { id: 'convidado', nome: 'Convidar não crente', pontos: 50, desc: 'Pessoa que convidou' },
-    { id: 'culto_segunda', nome: 'Culto Segunda', pontos: 15, desc: 'Culto de segunda-feira' },
-    { id: 'culto_quinta', nome: 'Culto Quinta', pontos: 15, desc: 'Culto de quinta-feira' },
-    { id: 'oracao_domingo', nome: 'Oração Domingo', pontos: 10, desc: 'Oração de domingo' },
-    { id: 'ligacao_grupo', nome: 'Ligação Grupo', pontos: 5, desc: 'Ligar no grupo' },
-    { id: 'sem_atraso', nome: 'Sem Atraso', pontos: 1, desc: 'Não ter atraso' },
-    { id: 'professor_ebd', nome: 'Professor EBD', pontos: 50, desc: 'Dar aula na escola bíblica' },
-    { id: 'dirigir_culto', nome: 'Dirigir/Prega', pontos: 100, desc: 'Dirigir ou pregar culto jovem' },
-    { id: 'pergunta_licao', nome: 'Pergunta Lição', pontos: 10, desc: 'Perguntas da lição EBD' }
-];
-
-// Lista de participantes (13 alunos)
-const participantes = [
-    {id: 1, nome: 'Ester'},
-    {id: 2, nome: 'Isabelle'},
-    {id: 3, nome: 'Flavia'},
-    {id: 4, nome: 'Julia'},
-    {id: 5, nome: 'Geovana'},
-    {id: 6, nome: 'João'},
-    {id: 7, nome: 'Pedro'},
-    {id: 8, nome: 'Moises'},
-    {id: 9, nome: 'Miguel'},
-    {id: 10, nome: 'Mariana'},
-    {id: 11, nome: 'Mateus'},
-    {id: 12, nome: 'Davi'},
-    {id: 13, nome: 'Guilherme'}
-];
-
-// Elementos DOM
-const rankingDiv = document.getElementById("ranking");
-const titulo = document.getElementById("titulo");
-const indicator = document.getElementById("admin-indicator");
-const checkbox = document.getElementById('menu-toggle');
 const modalAuth = document.getElementById('modal-auth');
-const modalPontos = document.getElementById('modal-pontos');
-const authTitle = document.getElementById('auth-title');
 const senha1 = document.getElementById('senha1');
 const senha2 = document.getElementById('senha2');
 const authError = document.getElementById('auth-error');
-const categoriaSelector = document.getElementById('categoriaSelector');
-const categoriaGrid = document.getElementById('categoriaGrid');
+const authTitle = document.getElementById('auth-title');
+const indicator = document.getElementById('admin-indicator');
+const titulo = document.getElementById('titulo');
 
-// Preencher grid de categorias
-function preencherCategoriaGrid() {
-    categoriaGrid.innerHTML = categorias.map(cat => `
-        <div class="categoria-item" onclick="selecionarCategoria('${cat.id}')" data-categoria="${cat.id}">
-            <div class="categoria-nome">${cat.nome}</div>
-            <div class="categoria-pontos">+${cat.pontos}</div>
-            <div class="categoria-desc">${cat.desc}</div>
-        </div>
-    `).join('');
-}
-
-preencherCategoriaGrid();
-
-// Selecionar categoria no modal
-window.selecionarCategoria = function(categoriaId) {
-    // Remover seleção anterior
-    document.querySelectorAll('.categoria-item').forEach(item => {
-        item.classList.remove('selecionado');
-    });
-    
-    // Adicionar seleção na nova categoria
-    const elemento = document.querySelector(`[data-categoria="${categoriaId}"]`);
-    if (elemento) {
-        elemento.classList.add('selecionado');
-    }
-    
-    // Armazenar categoria selecionada
-    window.categoriaSelecionadaModal = categoriaId;
-}
-
-// Travar rolagem do body quando o menu lateral estiver aberto
-checkbox.addEventListener('change', function() {
-    document.body.style.overflow = this.checked ? 'hidden' : 'auto';
-});
-
-// Seletor de categoria do ranking
-categoriaSelector.addEventListener('click', (e) => {
-    const btn = e.target.closest('.categoria-btn');
-    if (!btn) return;
-    
-    document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('ativo'));
-    btn.classList.add('ativo');
-    
-    categoriaSelecionada = btn.dataset.categoria;
-    render();
-});
-
-// Função para criar hash SHA-256 da senha
 async function hashSenha(senha) {
     const encoder = new TextEncoder();
     const data = encoder.encode(senha);
@@ -747,236 +665,89 @@ async function hashSenha(senha) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Função para verificar se já existe senha configurada
 async function verificarConfigAdmin() {
     const docRef = doc(db, "config", "admin");
     const docSnap = await getDoc(docRef);
-    
-    return docSnap.exists() && docSnap.data().senha_hash;
+    return docSnap.exists() && docSnap.data().senhas;
 }
 
-// Função para abrir modal de autenticação
 window.abrirModalAuth = async function() {
     const existeSenha = await verificarConfigAdmin();
-    
     isFirstAccess = !existeSenha;
-    
+
     if (isFirstAccess) {
         authTitle.innerText = 'Criar Senha Admin';
         senha2.style.display = "block";
-        senha1.placeholder = "Nova senha";
-        senha2.placeholder = "Confirme a senha";
     } else {
         authTitle.innerText = 'Login Admin';
         senha2.style.display = "none";
-        senha1.placeholder = "Digite sua senha";
     }
-    
+
     senha1.value = '';
     senha2.value = '';
     authError.innerText = '';
-    
     modalAuth.classList.remove("hidden");
-    document.body.style.overflow = 'hidden';
 }
 
 window.fecharModalAuth = function() {
     modalAuth.classList.add("hidden");
-    document.body.style.overflow = 'auto';
 }
 
-// Processar autenticação (criação ou login)
 window.processarAuth = async function() {
     const senha = senha1.value.trim();
-    
     if (!senha) {
         authError.innerText = "Digite uma senha!";
         return;
     }
-    
+
+    const hashDigitado = await hashSenha(senha);
+
     if (isFirstAccess) {
+
         const confirmacao = senha2.value.trim();
-        
         if (senha !== confirmacao) {
             authError.innerText = "As senhas não coincidem!";
             return;
         }
-        
-        if (senha.length < 6) {
-            authError.innerText = "A senha deve ter no mínimo 6 caracteres";
-            return;
-        }
-        
-        try {
-            const hash = await hashSenha(senha);
-            await setDoc(doc(db, "config", "admin"), { senha_hash: hash });
-            
+
+        await setDoc(doc(db, "config", "admin"), {
+            senhas: [hashDigitado]
+        });
+
+        modoAdmin = true;
+        indicator.style.display = "block";
+        fecharModalAuth();
+        alert("Senha criada com sucesso!");
+
+    } else {
+
+        const docSnap = await getDoc(doc(db, "config", "admin"));
+        const senhas = docSnap.data().senhas || [];
+
+        if (senhas.includes(hashDigitado)) {
             modoAdmin = true;
             indicator.style.display = "block";
             fecharModalAuth();
-            render();
-            
-            alert("Senha criada com sucesso! Guarde-a em local seguro.");
-        } catch (error) {
-            console.error("Erro ao criar senha:", error);
-            authError.innerText = "Erro ao criar senha. Tente novamente.";
-        }
-    } else {
-        try {
-            const docSnap = await getDoc(doc(db, "config", "admin"));
-            const hashArmazenado = docSnap.data().senha_hash;
-            const hashDigitado = await hashSenha(senha);
-            
-            if (hashDigitado === hashArmazenado) {
-                modoAdmin = true;
-                indicator.style.display = "block";
-                fecharModalAuth();
-                render();
-            } else {
-                authError.innerText = "Senha incorreta!";
-            }
-        } catch (error) {
-            console.error("Erro no login:", error);
-            authError.innerText = "Erro ao verificar senha.";
+        } else {
+            authError.innerText = "Senha incorreta!";
         }
     }
-}
+};
 
-// Event listener para ativar modo admin (clique no título)
-titulo.addEventListener("click", () => {
-    abrirModalAuth();
-});
+titulo.addEventListener("click", abrirModalAuth);
 
-// Funções do modal de pontos
-window.adicionar = function(id) {
-    if (!modoAdmin) return;
-    
-    participanteAtual = id;
-    const participante = participantes.find(p => p.id == id);
-    document.getElementById("modal-nome").innerText = participante.nome;
-    
-    // Limpar seleção anterior
-    document.querySelectorAll('.categoria-item').forEach(item => {
-        item.classList.remove('selecionado');
+/* FUNÇÃO EXTRA: adicionar nova senha sem apagar a antiga */
+window.adicionarNovaSenha = async function(novaSenha) {
+    if (!modoAdmin) return alert("Somente admin pode adicionar senha!");
+
+    const hash = await hashSenha(novaSenha);
+
+    await updateDoc(doc(db, "config", "admin"), {
+        senhas: arrayUnion(hash)
     });
-    
-    window.categoriaSelecionadaModal = null;
-    
-    modalPontos.classList.remove("hidden");
-    document.body.style.overflow = 'hidden';
-}
 
-window.fecharModalPontos = () => {
-    modalPontos.classList.add("hidden");
-    document.body.style.overflow = 'auto';
-}
-
-window.confirmarPontos = async function() {
-    if (!window.categoriaSelecionadaModal) {
-        alert("Selecione uma categoria!");
-        return;
-    }
-    
-    const categoria = categorias.find(c => c.id === window.categoriaSelecionadaModal);
-    if (!categoria) return;
-    
-    try {
-        await addDoc(collection(db, "transacoes"), {
-            participante_id: participanteAtual,
-            valor: categoria.pontos,
-            categoria: categoria.id,
-            nome_categoria: categoria.nome,
-            data: new Date().toISOString()
-        });
-        
-        fecharModalPontos();
-    } catch (error) {
-        console.error("Erro ao salvar:", error);
-        alert("Erro ao salvar pontos. Tente novamente.");
-    }
-}
-
-// Função para renderizar ranking por categoria
-function render() {
-    let ranking = participantes.map(p => {
-        let soma = 0;
-        
-        if (categoriaSelecionada === 'geral') {
-            // Soma todas as transações
-            soma = transacoes
-                .filter(t => t.participante_id === p.id)
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'quiz') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && t.categoria === 'quiz')
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'perguntas') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && (t.categoria === 'pergunta_biblica' || t.categoria === 'pergunta_licao'))
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'convidados') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && t.categoria === 'convidado')
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'cultos') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && (t.categoria === 'culto_segunda' || t.categoria === 'culto_quinta' || t.categoria === 'oracao_domingo'))
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'missoes') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && (t.categoria === 'ligacao_grupo' || t.categoria === 'sem_atraso'))
-                .reduce((acc, t) => acc + t.valor, 0);
-        } else if (categoriaSelecionada === 'professor') {
-            soma = transacoes
-                .filter(t => t.participante_id === p.id && (t.categoria === 'professor_ebd' || t.categoria === 'dirigir_culto'))
-                .reduce((acc, t) => acc + t.valor, 0);
-        }
-        
-        return { ...p, pontos: soma };
-    }).sort((a, b) => b.pontos - a.pontos);
-
-    // Se for geral, mostrar todos. Se for específico, mostrar só quem tem pontos
-    if (categoriaSelecionada !== 'geral') {
-        ranking = ranking.filter(p => p.pontos > 0);
-    }
-
-    if (ranking.length === 0) {
-        rankingDiv.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 40px;">Nenhum ponto registrado nesta categoria</div>';
-        return;
-    }
-
-    rankingDiv.innerHTML = ranking.map((p, i) => `
-        <div class="card rank-${i} ${modoAdmin ? 'admin-clickable' : ''}" 
-             onclick="${modoAdmin ? `adicionar(${p.id})` : ''}"
-             style="animation-delay: ${0.1 + i * 0.05}s">
-            <div class="rank-info">
-                <span class="pos">${i + 1}º</span>
-                <span class="name">${p.nome}</span>
-            </div>
-            <strong class="points">${p.pontos}</strong>
-        </div>
-    `).join("");
-}
-
-// Listener em tempo real do Firestore
-onSnapshot(collection(db, "transacoes"), (snapshot) => {
-    transacoes = snapshot.docs.map(doc => {
-        const data = doc.data();
-        // Garantir compatibilidade com dados antigos
-        if (!data.categoria) {
-            data.categoria = 'geral';
-            data.nome_categoria = 'Geral';
-        }
-        return data;
-    });
-    render();
-}, (error) => {
-    console.error("Erro no listener:", error);
-    rankingDiv.innerHTML = '<div style="text-align: center; color: var(--accent-red); padding: 40px;">Erro ao carregar dados. Verifique conexão.</div>';
-});
-
-// Render inicial
-render();
+    alert("Nova senha adicionada com sucesso!");
+};
 </script>
 </body>
 </html>
