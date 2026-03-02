@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Virtudes | Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #141414;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3A3A3;
+            --border-light: rgba(255, 255, 255, 0.06);
+            --transition-smooth: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        .m3-header {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            border-bottom: 1px solid var(--border-light);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .brand-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        /* --- MENU ICON (HAMBURGUER NO CANTO DIREITO) --- */
+        #menu-toggle {
+            display: none;
+        }
+
+        .menu-icon-label {
+            cursor: pointer;
+            z-index: 3000;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .line {
+            width: 22px;
+            height: 1px;
+            background-color: var(--text-primary);
+            transition: var(--transition-smooth);
+        }
+
+        /* Transformação para X */
+        #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(2) { opacity: 0; }
+        #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* --- SIDEBAR MENU --- */
+        .main-menu {
+            position: fixed;
+            top: 0;
+            right: -100%; 
+            width: 70%; 
+            max-width: 350px;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            padding: 140px 40px;
+            gap: 35px;
+            transition: var(--transition-smooth);
+            border-left: 1px solid var(--border-light);
+            z-index: 2000;
+        }
+
+        #menu-toggle:checked ~ .main-menu {
+            right: 0;
+        }
+
+        /* OPÇÕES COM LINHA ANIMADA */
+        .main-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+            width: fit-content;
+        }
+
+        .main-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--text-primary);
+            transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .main-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .main-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* --- OVERLAY --- */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+            z-index: 1500;
+        }
+
+        #menu-toggle:checked ~ .menu-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="m3-header">
+        <input type="checkbox" id="menu-toggle">
+        
+        <div class="nav-container-wrapper">
+            <a href="#" class="brand-logo">Virtudes</a>
+
+            <label for="menu-toggle" class="menu-icon-label">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </label>
+        </div>
+
+        <label for="menu-toggle" class="menu-overlay"></label>
+
+        <nav class="main-menu">
+            <a href="ebd.html">Ranking da EBD</a>
+            <a href="#">Programação</a>
+            <a href="#">Próximas Aulas</a>
+        </nav>
+    </header>
+
+    <script>
+        // Bloquear scroll quando menu estiver aberto
+        const checkbox = document.getElementById('menu-toggle');
+        checkbox.addEventListener('change', function() {
+            document.body.style.overflow = this.checked ? 'hidden' : 'auto';
+        });
+
+        // Fechar ao clicar em um link
+        document.querySelectorAll('.main-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                checkbox.checked = false;
+                document.body.style.overflow = 'auto';
+            });
+        });
+    </script>
+</body>
+</html>
