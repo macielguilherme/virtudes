@@ -63,7 +63,7 @@
             color: var(--text-primary);
         }
 
-        /* --- MENU ICON (HAMBURGUER NO CANTO DIREITO) --- */
+        /* --- MENU ICON --- */
         #menu-toggle {
             display: none;
         }
@@ -84,7 +84,6 @@
             transition: var(--transition-smooth);
         }
 
-        /* Transformação para X */
         #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(2) { opacity: 0; }
         #menu-toggle:checked ~ .nav-container-wrapper .line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
@@ -111,7 +110,6 @@
             right: 0;
         }
 
-        /* OPÇÕES COM LINHA ANIMADA */
         .main-menu a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -160,6 +158,23 @@
             visibility: visible;
         }
 
+        /* --- INFORME SECTION --- */
+        .informe-section {
+            margin-top: 100px; /* espaço abaixo da navbar fixa */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        .informe-img {
+            width: 736px; /* largura da imagem */
+            max-width: 100%; /* responsivo para celular */
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -180,20 +195,22 @@
         <label for="menu-toggle" class="menu-overlay"></label>
 
         <nav class="main-menu">
-            <a href="ebd.html">Ranking da EBD</a>
+            <a href="#">Ranking da EBD</a>
             <a href="#">Programação</a>
             <a href="#">Próximas Aulas</a>
         </nav>
     </header>
 
+    <section class="informe-section">
+        <img src="pizza.jpg" alt="Informe" class="informe-img">
+    </section>
+
     <script>
-        // Bloquear scroll quando menu estiver aberto
         const checkbox = document.getElementById('menu-toggle');
         checkbox.addEventListener('change', function() {
             document.body.style.overflow = this.checked ? 'hidden' : 'auto';
         });
 
-        // Fechar ao clicar em um link
         document.querySelectorAll('.main-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 checkbox.checked = false;
