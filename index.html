@@ -30,7 +30,7 @@
             min-height: 100vh;
         }
 
-        /* --- HEADER (AJUSTADO PARA MENU NA ESQUERDA) --- */
+        /* --- HEADER --- */
         .m3-header {
             background-color: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(15px);
@@ -38,15 +38,13 @@
             height: 80px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-between; /* Garante um em cada ponta */
             padding: 0 6%;
             border-bottom: 1px solid var(--border-light);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            /* Inverte a ordem visual: Itens da esquerda vão para a direita e vice-versa */
-            flex-direction: row-reverse; 
         }
 
         .brand-logo {
@@ -55,6 +53,7 @@
             letter-spacing: -1px;
             text-decoration: none;
             color: var(--text-primary);
+            order: 1; /* Força ficar na esquerda */
         }
 
         /* --- MENU HAMBURGUER --- */
@@ -66,7 +65,7 @@
             display: flex; 
             flex-direction: column; 
             gap: 7px; 
-            padding: 10px 0;
+            order: 2; /* Força ficar na direita */
         }
         
         .line { 
@@ -76,16 +75,16 @@
             transition: var(--transition-smooth); 
         }
 
-        /* Animação do X no hamburguer */
+        /* Animação do X */
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(2) { opacity: 0; }
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
         
-        /* Menu Lateral abrindo da ESQUERDA */
+        /* Menu Lateral (Abrindo da Direita) */
         .main-menu {
             position: fixed; 
             top: 0; 
-            left: -100%; /* Escondido à esquerda */
+            right: -100%; 
             width: 75%; 
             max-width: 350px; 
             height: 100vh;
@@ -95,11 +94,11 @@
             padding: 140px 40px; 
             gap: 35px;
             transition: var(--transition-smooth); 
-            border-right: 1px solid var(--border-light); 
+            border-left: 1px solid var(--border-light); 
             z-index: 2000;
         }
 
-        #menu-toggle:checked ~ .main-menu { left: 0; }
+        #menu-toggle:checked ~ .main-menu { right: 0; }
 
         .main-menu a { 
             color: var(--text-secondary); 
@@ -123,7 +122,7 @@
         }
         #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
-        /* --- LAYOUT CONTEÚDO --- */
+        /* --- CONTEÚDO --- */
         .informe-container {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -241,11 +240,7 @@
 
         /* --- RESPONSIVIDADE --- */
         @media (max-width: 968px) {
-            .details-side { 
-                order: 2; 
-                padding: 40px 25px; 
-                min-height: auto;
-            }
+            .details-side { order: 2; padding: 40px 25px; min-height: auto; }
             .image-side { order: 1; }
             .informe-container { padding: 40px 20px; }
             .event-card h1 { font-size: 2rem; }
@@ -315,7 +310,6 @@
     <script>
         const checkbox = document.getElementById('menu-toggle');
         checkbox.addEventListener('change', function() {
-            // Trava o scroll do site quando o menu está aberto
             document.body.style.overflow = this.checked ? 'hidden' : 'auto';
         });
     </script>
