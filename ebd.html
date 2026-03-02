@@ -209,7 +209,7 @@
             border: 1px solid var(--border-light);
         }
 
-        /* --- MODAL (REDESENHADO PARA COMBINAR COM O TEMA) --- */
+        /* --- MODAIS (PONTOS E ADMIN) --- */
         .modal {
             position: fixed; 
             inset: 0; 
@@ -217,12 +217,12 @@
             backdrop-filter: blur(8px);
             display: flex; 
             justify-content: center;
-            align-items: flex-end; 
+            align-items: center; 
             z-index: 5000; 
             transition: opacity 0.3s ease;
         }
         
-        .hidden { 
+        .modal.hidden { 
             opacity: 0; 
             pointer-events: none; 
         }
@@ -230,34 +230,105 @@
         .modal-content {
             background: var(--bg-secondary);
             border: 1px solid var(--border-light);
-            width: 100%; 
-            max-width: 500px; 
-            border-radius: 32px 32px 0 0;
+            width: 90%; 
+            max-width: 450px; 
+            border-radius: 32px;
             padding: 40px 30px; 
-            transform: translateY(0); 
+            transform: scale(1); 
             transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
         
-        .hidden .modal-content { 
-            transform: translateY(100%); 
+        .modal.hidden .modal-content { 
+            transform: scale(0.9); 
         }
 
         .modal-content h3 { 
             text-align: center; 
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 5px; 
+            margin-bottom: 25px; 
             background: linear-gradient(to right, #fff, #a3a3a3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .modal-content p { 
+        .modal-content input {
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 16px; 
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-light); 
+            color: white; 
             text-align: center; 
-            font-size: 0.8rem; 
-            color: var(--text-secondary); 
-            margin-bottom: 30px; 
+            font-size: 1.2rem; 
+            font-weight: 500;
+            outline: none; 
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .modal-content input:focus {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .modal-content input[type="password"] {
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .error-message {
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            text-align: center;
+            margin: 10px 0;
+            min-height: 20px;
+        }
+
+        .modal-actions { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-top: 25px; 
+        }
+        
+        .btn-primary { 
+            background: white; 
+            color: black; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 16px; 
+            font-weight: 700; 
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: var(--transition-smooth);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary { 
+            background: transparent; 
+            color: white; 
+            border: 1px solid var(--border-light); 
+            padding: 16px; 
+            border-radius: 16px; 
+            font-weight: 600;
+            cursor: pointer; 
+            transition: var(--transition-smooth);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--text-secondary);
+        }
+
+        /* --- MODAL DE PONTOS (AJUSTADO) --- */
+        .modal-pontos .modal-content {
+            max-width: 500px;
         }
 
         .quick-grid { 
@@ -283,69 +354,6 @@
             background: rgba(255,255,255,0.1);
             border-color: var(--accent-red);
             transform: translateY(-2px);
-        }
-        
-        .btn-q:active { 
-            background: var(--accent-red); 
-        }
-
-        input {
-            width: 100%; 
-            padding: 20px; 
-            border-radius: 16px; 
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border-light); 
-            color: white; 
-            text-align: center; 
-            font-size: 1.5rem; 
-            font-weight: 600;
-            outline: none; 
-            transition: 0.3s;
-        }
-
-        input:focus {
-            border-color: var(--accent-red);
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .modal-actions { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-top: 25px; 
-        }
-        
-        .btn-save { 
-            background: white; 
-            color: black; 
-            border: none; 
-            padding: 18px; 
-            border-radius: 16px; 
-            font-weight: 700; 
-            font-size: 1rem;
-            cursor: pointer; 
-            transition: var(--transition-smooth);
-        }
-        
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(255,255,255,0.3);
-        }
-        
-        .btn-cancel { 
-            background: transparent; 
-            color: white; 
-            border: 1px solid var(--border-light); 
-            padding: 18px; 
-            border-radius: 16px; 
-            font-weight: 600;
-            cursor: pointer; 
-            transition: var(--transition-smooth);
-        }
-        
-        .btn-cancel:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--text-secondary);
         }
 
         .admin-status {
@@ -379,6 +387,10 @@
             
             .quick-grid { gap: 8px; }
             .btn-q { padding: 15px 5px; font-size: 1rem; }
+            
+            .modal-content {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
@@ -407,20 +419,35 @@
 
 <div id="admin-indicator" class="admin-status">Modo Admin Ativo</div>
 
-<div id="modal" class="modal hidden">
+<!-- Modal de Autenticação Admin (criação/login) -->
+<div id="modal-auth" class="modal hidden">
+    <div class="modal-content">
+        <h3 id="auth-title">🔐 Acesso Admin</h3>
+        <input type="password" id="senha1" placeholder="Digite sua senha">
+        <input type="password" id="senha2" placeholder="Confirme a senha" style="display: none;">
+        <div id="auth-error" class="error-message"></div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button>
+            <button class="btn-primary" onclick="processarAuth()">Continuar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Adicionar Pontos -->
+<div id="modal-pontos" class="modal modal-pontos hidden">
     <div class="modal-content">
         <h3 id="modal-nome">Nome do Aluno</h3>
         <p>Adicionar Pontuação</p>
         <input type="number" id="valorCustom" placeholder="00">
         <div class="quick-grid">
-            <button class="btn-q" onclick="window.setValor(5)">+5</button>
-            <button class="btn-q" onclick="window.setValor(10)">+10</button>
-            <button class="btn-q" onclick="window.setValor(20)">+20</button>
-            <button class="btn-q" onclick="window.setValor(50)">+50</button>
+            <button class="btn-q" onclick="setValor(5)">+5</button>
+            <button class="btn-q" onclick="setValor(10)">+10</button>
+            <button class="btn-q" onclick="setValor(20)">+20</button>
+            <button class="btn-q" onclick="setValor(50)">+50</button>
         </div>
         <div class="modal-actions">
-            <button class="btn-cancel" onclick="window.fecharModal()">Voltar</button>
-            <button class="btn-save" onclick="window.confirmarPontos()">Salvar Pontos</button>
+            <button class="btn-secondary" onclick="fecharModalPontos()">Voltar</button>
+            <button class="btn-primary" onclick="confirmarPontos()">Salvar Pontos</button>
         </div>
     </div>
 </div>
@@ -447,8 +474,9 @@ const db = getFirestore(app);
 let modoAdmin = false;
 let participanteAtual = null;
 let transacoes = [];
+let isFirstAccess = false; // Flag para saber se é primeiro acesso
 
-// Lista de participantes (13 alunos conforme solicitado)
+// Lista de participantes (13 alunos)
 const participantes = [
     {id: 1, nome: 'Ester'},
     {id: 2, nome: 'Isabelle'},
@@ -470,21 +498,17 @@ const rankingDiv = document.getElementById("ranking");
 const titulo = document.getElementById("titulo");
 const indicator = document.getElementById("admin-indicator");
 const checkbox = document.getElementById('menu-toggle');
+const modalAuth = document.getElementById('modal-auth');
+const modalPontos = document.getElementById('modal-pontos');
+const authTitle = document.getElementById('auth-title');
+const senha1 = document.getElementById('senha1');
+const senha2 = document.getElementById('senha2');
+const authError = document.getElementById('auth-error');
 
 // Travar rolagem do body quando o menu lateral estiver aberto
 checkbox.addEventListener('change', function() {
     document.body.style.overflow = this.checked ? 'hidden' : 'auto';
 });
-
-// Função para gerar senha aleatória de 12 caracteres
-function gerarSenhaAleatoria() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-    let senha = '';
-    for (let i = 0; i < 12; i++) {
-        senha += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return senha;
-}
 
 // Função para criar hash SHA-256 da senha
 async function hashSenha(senha) {
@@ -495,71 +519,132 @@ async function hashSenha(senha) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Função para verificar/configurar senha admin
+// Função para verificar se já existe senha configurada
 async function verificarConfigAdmin() {
     const docRef = doc(db, "config", "admin");
     const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists() || !docSnap.data().senha_hash) {
-        // Primeiro acesso: gerar senha aleatória e salvar hash
-        const senhaGerada = gerarSenhaAleatoria();
-        const hash = await hashSenha(senhaGerada);
-        
-        await setDoc(docRef, { senha_hash: hash });
-        
-        // Mostrar senha para o usuário (primeiro e único admin)
-        alert(`🔐 Senha de administrador gerada automaticamente!\n\nGuarde esta senha em local seguro: ${senhaGerada}\n\nEla será necessária para acessar o modo admin no futuro.`);
-    }
+    
+    return docSnap.exists() && docSnap.data().senha_hash;
 }
 
-// Verificar configuração ao carregar a página
-verificarConfigAdmin();
-
-// Função de login admin
-async function loginAdmin(senhaDigitada) {
-    const docSnap = await getDoc(doc(db, "config", "admin"));
-    if (!docSnap.exists() || !docSnap.data().senha_hash) return false;
+// Função para abrir modal de autenticação
+window.abrirModalAuth = async function() {
+    // Verificar se já existe senha configurada
+    const existeSenha = await verificarConfigAdmin();
     
-    const hashDigitado = await hashSenha(senhaDigitada);
-    return hashDigitado === docSnap.data().senha_hash;
+    isFirstAccess = !existeSenha;
+    
+    if (isFirstAccess) {
+        // Primeiro acesso: mostrar campos para criar senha
+        authTitle.innerText = "🔐 Criar Senha Admin";
+        senha2.style.display = "block";
+        senha1.placeholder = "Nova senha";
+        senha2.placeholder = "Confirme a senha";
+    } else {
+        // Login: apenas um campo
+        authTitle.innerText = "🔐 Login Admin";
+        senha2.style.display = "none";
+        senha1.placeholder = "Digite sua senha";
+    }
+    
+    // Limpar campos
+    senha1.value = '';
+    senha2.value = '';
+    authError.innerText = '';
+    
+    modalAuth.classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+
+window.fecharModalAuth = function() {
+    modalAuth.classList.add("hidden");
+    document.body.style.overflow = 'auto';
+}
+
+// Processar autenticação (criação ou login)
+window.processarAuth = async function() {
+    const senha = senha1.value.trim();
+    
+    if (!senha) {
+        authError.innerText = "Digite uma senha!";
+        return;
+    }
+    
+    if (isFirstAccess) {
+        // Primeiro acesso: criar nova senha
+        const confirmacao = senha2.value.trim();
+        
+        if (senha !== confirmacao) {
+            authError.innerText = "As senhas não coincidem!";
+            return;
+        }
+        
+        if (senha.length < 6) {
+            authError.innerText = "A senha deve ter no mínimo 6 caracteres";
+            return;
+        }
+        
+        try {
+            // Salvar hash da senha no Firestore
+            const hash = await hashSenha(senha);
+            await setDoc(doc(db, "config", "admin"), { senha_hash: hash });
+            
+            // Ativar modo admin
+            modoAdmin = true;
+            indicator.style.display = "block";
+            fecharModalAuth();
+            render();
+            
+            alert("✅ Senha criada com sucesso! Guarde-a em local seguro.");
+        } catch (error) {
+            console.error("Erro ao criar senha:", error);
+            authError.innerText = "Erro ao criar senha. Tente novamente.";
+        }
+    } else {
+        // Login: verificar senha
+        try {
+            const docSnap = await getDoc(doc(db, "config", "admin"));
+            const hashArmazenado = docSnap.data().senha_hash;
+            const hashDigitado = await hashSenha(senha);
+            
+            if (hashDigitado === hashArmazenado) {
+                modoAdmin = true;
+                indicator.style.display = "block";
+                fecharModalAuth();
+                render();
+            } else {
+                authError.innerText = "Senha incorreta!";
+            }
+        } catch (error) {
+            console.error("Erro no login:", error);
+            authError.innerText = "Erro ao verificar senha.";
+        }
+    }
 }
 
 // Event listener para ativar modo admin (clique no título)
-titulo.addEventListener("click", async () => {
-    const senha = prompt("Digite a senha de administrador:");
-    if (!senha) return;
-    
-    const ok = await loginAdmin(senha);
-    
-    if (ok) {
-        modoAdmin = true;
-        indicator.style.display = "block";
-        render(); // Re-renderizar para atualizar os cards (adicionar classe clickable)
-        alert("✅ Modo admin ativado! Clique nos cards para adicionar pontos.");
-    } else {
-        alert("❌ Senha incorreta!");
-    }
+titulo.addEventListener("click", () => {
+    abrirModalAuth();
 });
 
-// Função para abrir modal de adicionar pontos
+// Funções do modal de pontos
 window.adicionar = function(id) {
     if (!modoAdmin) return;
     
     participanteAtual = id;
     const participante = participantes.find(p => p.id == id);
     document.getElementById("modal-nome").innerText = participante.nome;
-    document.getElementById("modal").classList.remove("hidden");
+    document.getElementById("valorCustom").value = '';
+    modalPontos.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
 }
 
-// Funções auxiliares do modal
 window.setValor = (v) => {
     document.getElementById("valorCustom").value = v;
 }
 
-window.fecharModal = () => {
-    document.getElementById("modal").classList.add("hidden");
-    document.getElementById("valorCustom").value = '';
+window.fecharModalPontos = () => {
+    modalPontos.classList.add("hidden");
     document.body.style.overflow = 'auto';
 }
 
@@ -578,7 +663,7 @@ window.confirmarPontos = async function() {
             data: new Date().toISOString()
         });
         
-        fecharModal();
+        fecharModalPontos();
     } catch (error) {
         console.error("Erro ao salvar:", error);
         alert("Erro ao salvar pontos. Tente novamente.");
