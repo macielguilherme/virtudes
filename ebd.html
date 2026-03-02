@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ranking EBD | Virtudes</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
         * {
             margin: 0;
@@ -103,12 +104,22 @@
             -webkit-text-fill-color: transparent;
             cursor: pointer;
             transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .header-title h1:hover {
             background: linear-gradient(to right, var(--accent-red), #fff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .header-title h1 .material-icons {
+            font-size: 2rem;
+            background: none;
+            -webkit-text-fill-color: var(--accent-red);
         }
 
         .header-title p {
@@ -251,6 +262,16 @@
             background: linear-gradient(to right, #fff, #a3a3a3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-content h3 .material-icons {
+            font-size: 2rem;
+            background: none;
+            -webkit-text-fill-color: var(--accent-red);
         }
 
         .modal-content input {
@@ -303,6 +324,10 @@
             font-size: 1rem;
             cursor: pointer; 
             transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .btn-primary:hover {
@@ -319,11 +344,20 @@
             font-weight: 600;
             cursor: pointer; 
             transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .btn-secondary:hover {
             background: rgba(255,255,255,0.05);
             border-color: var(--text-secondary);
+        }
+
+        .btn-primary .material-icons,
+        .btn-secondary .material-icons {
+            font-size: 1.2rem;
         }
 
         /* --- MODAL DE PONTOS (AJUSTADO) --- */
@@ -372,6 +406,13 @@
             z-index: 900;
             box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
             border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-status .material-icons {
+            font-size: 14px;
         }
 
         /* --- RESPONSIVIDADE --- */
@@ -397,7 +438,7 @@
 <body>
 <header class="m3-header">
     <input type="checkbox" id="menu-toggle">
-    <a href="index.html" class="brand-logo">Virtudes</a>
+    <a href="index.html" class="brand-logo">VIRTUDES</a>
     <label for="menu-toggle" class="menu-icon-label">
         <div class="line"></div><div class="line"></div><div class="line"></div>
     </label>
@@ -412,23 +453,39 @@
 <div class="container">
     <div class="header-title">
         <p>Escola Bíblica Dominical</p>
-        <h1 id="titulo">RANKING GERAL</h1>
+        <h1 id="titulo">
+            <span class="material-icons">military_tech</span>
+            RANKING GERAL
+            <span class="material-icons">military_tech</span>
+        </h1>
     </div>
     <div id="ranking" class="ranking-list"></div>
 </div>
 
-<div id="admin-indicator" class="admin-status">Modo Admin Ativo</div>
+<div id="admin-indicator" class="admin-status">
+    <span class="material-icons">admin_panel_settings</span>
+    Modo Admin Ativo
+</div>
 
 <!-- Modal de Autenticação Admin (criação/login) -->
 <div id="modal-auth" class="modal hidden">
     <div class="modal-content">
-        <h3 id="auth-title">🔐 Acesso Admin</h3>
+        <h3>
+            <span class="material-icons">admin_panel_settings</span>
+            Acesso Admin
+        </h3>
         <input type="password" id="senha1" placeholder="Digite sua senha">
         <input type="password" id="senha2" placeholder="Confirme a senha" style="display: none;">
         <div id="auth-error" class="error-message"></div>
         <div class="modal-actions">
-            <button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button>
-            <button class="btn-primary" onclick="processarAuth()">Continuar</button>
+            <button class="btn-secondary" onclick="fecharModalAuth()">
+                <span class="material-icons">close</span>
+                Cancelar
+            </button>
+            <button class="btn-primary" onclick="processarAuth()">
+                <span class="material-icons">check_circle</span>
+                Continuar
+            </button>
         </div>
     </div>
 </div>
@@ -436,7 +493,10 @@
 <!-- Modal de Adicionar Pontos -->
 <div id="modal-pontos" class="modal modal-pontos hidden">
     <div class="modal-content">
-        <h3 id="modal-nome">Nome do Aluno</h3>
+        <h3>
+            <span class="material-icons">add_circle</span>
+            <span id="modal-nome">Nome do Aluno</span>
+        </h3>
         <p>Adicionar Pontuação</p>
         <input type="number" id="valorCustom" placeholder="00">
         <div class="quick-grid">
@@ -446,8 +506,14 @@
             <button class="btn-q" onclick="setValor(50)">+50</button>
         </div>
         <div class="modal-actions">
-            <button class="btn-secondary" onclick="fecharModalPontos()">Voltar</button>
-            <button class="btn-primary" onclick="confirmarPontos()">Salvar Pontos</button>
+            <button class="btn-secondary" onclick="fecharModalPontos()">
+                <span class="material-icons">arrow_back</span>
+                Voltar
+            </button>
+            <button class="btn-primary" onclick="confirmarPontos()">
+                <span class="material-icons">save</span>
+                Salvar Pontos
+            </button>
         </div>
     </div>
 </div>
@@ -474,7 +540,7 @@ const db = getFirestore(app);
 let modoAdmin = false;
 let participanteAtual = null;
 let transacoes = [];
-let isFirstAccess = false; // Flag para saber se é primeiro acesso
+let isFirstAccess = false;
 
 // Lista de participantes (13 alunos)
 const participantes = [
@@ -529,25 +595,21 @@ async function verificarConfigAdmin() {
 
 // Função para abrir modal de autenticação
 window.abrirModalAuth = async function() {
-    // Verificar se já existe senha configurada
     const existeSenha = await verificarConfigAdmin();
     
     isFirstAccess = !existeSenha;
     
     if (isFirstAccess) {
-        // Primeiro acesso: mostrar campos para criar senha
-        authTitle.innerText = "🔐 Criar Senha Admin";
+        document.querySelector('#modal-auth h3').innerHTML = '<span class="material-icons">create</span> Criar Senha Admin';
         senha2.style.display = "block";
         senha1.placeholder = "Nova senha";
         senha2.placeholder = "Confirme a senha";
     } else {
-        // Login: apenas um campo
-        authTitle.innerText = "🔐 Login Admin";
+        document.querySelector('#modal-auth h3').innerHTML = '<span class="material-icons">lock</span> Login Admin';
         senha2.style.display = "none";
         senha1.placeholder = "Digite sua senha";
     }
     
-    // Limpar campos
     senha1.value = '';
     senha2.value = '';
     authError.innerText = '';
@@ -571,7 +633,6 @@ window.processarAuth = async function() {
     }
     
     if (isFirstAccess) {
-        // Primeiro acesso: criar nova senha
         const confirmacao = senha2.value.trim();
         
         if (senha !== confirmacao) {
@@ -585,23 +646,20 @@ window.processarAuth = async function() {
         }
         
         try {
-            // Salvar hash da senha no Firestore
             const hash = await hashSenha(senha);
             await setDoc(doc(db, "config", "admin"), { senha_hash: hash });
             
-            // Ativar modo admin
             modoAdmin = true;
-            indicator.style.display = "block";
+            indicator.style.display = "flex";
             fecharModalAuth();
             render();
             
-            alert("✅ Senha criada com sucesso! Guarde-a em local seguro.");
+            alert("Senha criada com sucesso! Guarde-a em local seguro.");
         } catch (error) {
             console.error("Erro ao criar senha:", error);
             authError.innerText = "Erro ao criar senha. Tente novamente.";
         }
     } else {
-        // Login: verificar senha
         try {
             const docSnap = await getDoc(doc(db, "config", "admin"));
             const hashArmazenado = docSnap.data().senha_hash;
@@ -609,7 +667,7 @@ window.processarAuth = async function() {
             
             if (hashDigitado === hashArmazenado) {
                 modoAdmin = true;
-                indicator.style.display = "block";
+                indicator.style.display = "flex";
                 fecharModalAuth();
                 render();
             } else {
@@ -672,7 +730,6 @@ window.confirmarPontos = async function() {
 
 // Função para renderizar ranking
 function render() {
-    // Calcular pontos por participante
     const ranking = participantes.map(p => {
         const soma = transacoes
             .filter(t => t.participante_id === p.id)
@@ -680,7 +737,6 @@ function render() {
         return { ...p, pontos: soma };
     }).sort((a, b) => b.pontos - a.pontos);
 
-    // Gerar HTML
     rankingDiv.innerHTML = ranking.map((p, i) => `
         <div class="card rank-${i} ${modoAdmin ? 'admin-clickable' : ''}" 
              onclick="${modoAdmin ? `adicionar(${p.id})` : ''}"
