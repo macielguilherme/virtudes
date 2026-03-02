@@ -631,7 +631,7 @@ const db = getFirestore(app);
 let modoAdmin = false;
 let participanteAtual = null;
 let transacoes = [];
-let isFirstAccess = false;
+
 
 // Critérios de pontuação (exatamente como solicitado)
 const criterios = [
@@ -721,39 +721,22 @@ async function hashSenha(senha) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Função para verificar se já existe senha configurada
-async function verificarConfigAdmin() {
-    const docRef = doc(db, "config", "admin");
-    const docSnap = await getDoc(docRef);
-    
-    return docSnap.exists() && docSnap.data().senha_hash;
-}
+
 
 // Função para abrir modal de autenticação
 window.abrirModalAuth = async function() {
-    const existeSenha = await verificarConfigAdmin();
-    
-    isFirstAccess = !existeSenha;
-    
-    if (isFirstAccess) {
-        authTitle.innerText = 'Criar Senha Admin';
-        senha2.style.display = "block";
-        senha1.placeholder = "Nova senha";
-        senha2.placeholder = "Confirme a senha";
-    } else {
-        authTitle.innerText = 'Login Admin';
-        senha2.style.display = "none";
-        senha1.placeholder = "Digite sua senha";
-    }
-    
+    authTitle.innerText = 'Login Admin';
+    senha2.style.display = "none";
+    senha1.placeholder = "Digite sua senha";
+
     senha1.value = '';
     senha2.value = '';
     authError.innerText = '';
-    
+
     modalAuth.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
 }
-
+       
 window.fecharModalAuth = function() {
     modalAuth.classList.add("hidden");
     document.body.style.overflow = 'auto';
@@ -762,60 +745,44 @@ window.fecharModalAuth = function() {
 // Processar autenticação (criação ou login)
 window.processarAuth = async function() {
     const senha = senha1.value.trim();
-    
+
     if (!senha) {
         authError.innerText = "Digite uma senha!";
         return;
     }
-    
-    if (isFirstAccess) {
-        const confirmacao = senha2.value.trim();
-        
-        if (senha !== confirmacao) {
-            authError.innerText = "As senhas não coincidem!";
+
+    try {
+        const docSnap = await getDoc(doc(db, "config", "admin"));
+
+        if (!docSnap.exists()) {
+            authError.innerText = "Configuração de admin não encontrada.";
             return;
         }
-        
-        if (senha.length < 6) {
-            authError.innerText = "A senha deve ter no mínimo 6 caracteres";
+
+        const senhasArray = docSnap.data().senhas || [];
+
+        if (!Array.isArray(senhasArray) || senhasArray.length === 0) {
+            authError.innerText = "Nenhuma senha configurada.";
             return;
         }
-        
-        try {
-            const hash = await hashSenha(senha);
-            await setDoc(doc(db, "config", "admin"), { senha_hash: hash });
-            
+
+        const hashDigitado = await hashSenha(senha);
+
+        if (senhasArray.includes(hashDigitado)) {
             modoAdmin = true;
             indicator.style.display = "block";
             fecharModalAuth();
             render();
-            
-            alert("Senha criada com sucesso! Guarde-a em local seguro.");
-        } catch (error) {
-            console.error("Erro ao criar senha:", error);
-            authError.innerText = "Erro ao criar senha. Tente novamente.";
+        } else {
+            authError.innerText = "Senha incorreta!";
         }
-    } else {
-        try {
-            const docSnap = await getDoc(doc(db, "config", "admin"));
-            const hashArmazenado = docSnap.data().senha_hash;
-            const hashDigitado = await hashSenha(senha);
-            
-            if (hashDigitado === hashArmazenado) {
-                modoAdmin = true;
-                indicator.style.display = "block";
-                fecharModalAuth();
-                render();
-            } else {
-                authError.innerText = "Senha incorreta!";
-            }
-        } catch (error) {
-            console.error("Erro no login:", error);
-            authError.innerText = "Erro ao verificar senha.";
-        }
+
+    } catch (error) {
+        console.error("Erro no login:", error);
+        authError.innerText = "Erro ao verificar senha.";
     }
 }
-
+       
 // Event listener para ativar modo admin (clique no título)
 titulo.addEventListener("click", () => {
     abrirModalAuth();
