@@ -24,6 +24,7 @@
             --border-hover: rgba(255, 255, 255, 0.15);
             --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
             --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --expired-opacity: 0.4;
         }
 
         body {
@@ -135,13 +136,35 @@
             animation: fadeInUp 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
         }
 
+        /* Eventos passados */
+        .event-item.expired {
+            opacity: var(--expired-opacity);
+            filter: grayscale(0.7);
+            display: none; /* Será controlado pelo JavaScript */
+        }
+
+        .event-item.expired:hover {
+            opacity: 0.6;
+            transform: translateY(-2px);
+        }
+
+        .event-item.expired .event-date {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
         /* Delay em cascata para cada card */
         .event-item:nth-child(1) { animation-delay: 0.1s; }
-        .event-item:nth-child(2) { animation-delay: 0.2s; }
-        .event-item:nth-child(3) { animation-delay: 0.3s; }
-        .event-item:nth-child(4) { animation-delay: 0.4s; }
-        .event-item:nth-child(5) { animation-delay: 0.5s; }
-        .event-item:nth-child(6) { animation-delay: 0.6s; }
+        .event-item:nth-child(2) { animation-delay: 0.15s; }
+        .event-item:nth-child(3) { animation-delay: 0.2s; }
+        .event-item:nth-child(4) { animation-delay: 0.25s; }
+        .event-item:nth-child(5) { animation-delay: 0.3s; }
+        .event-item:nth-child(6) { animation-delay: 0.35s; }
+        .event-item:nth-child(7) { animation-delay: 0.4s; }
+        .event-item:nth-child(8) { animation-delay: 0.45s; }
+        .event-item:nth-child(9) { animation-delay: 0.5s; }
+        .event-item:nth-child(10) { animation-delay: 0.55s; }
+        .event-item:nth-child(11) { animation-delay: 0.6s; }
+        .event-item:nth-child(12) { animation-delay: 0.65s; }
 
         .event-item:hover {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
@@ -236,6 +259,12 @@
             color: #000;
             border-color: transparent;
             font-weight: 700;
+        }
+
+        .tag.expired-badge {
+            background: rgba(100, 100, 100, 0.2);
+            color: #999;
+            border-color: #333;
         }
 
         /* --- GRIDS DE ESCALA (UX APRIMORADA) --- */
@@ -362,6 +391,35 @@
             font-weight: 500;
         }
 
+        /* --- BOTÃO PARA MOSTRAR EVENTOS PASSADOS --- */
+        .show-past-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 10px;
+        }
+
+        .show-past-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .show-past-btn:hover {
+            border-color: var(--accent-red);
+            color: var(--text-primary);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
         /* Estilo do Modal de Senha */
         .modal-overlay-pwd {
             position: fixed;
@@ -441,6 +499,26 @@
 
             .event-date span { margin-bottom: 0; font-size: 1.6rem; }
         }
+
+        /* Mensagem quando não há eventos */
+        .no-events-message {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 24px;
+            border: 1px dashed var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .no-events-message p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .no-events-message small {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -471,27 +549,195 @@
             <h1>NOSSA PROGRAMAÇÃO</h1>
         </div>
 
-        <div class="schedule-list">
-            
-            <div class="event-item normal">
+        <div class="schedule-list" id="scheduleList">
+            <!-- Cultos de Quinta (Noite da Vitória) -->
+            <div class="event-item normal" data-day="05" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>05</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Noite da Vitória</h3>
+                    <p>Culto de quinta-feira - um tempo de celebrar as vitórias que Deus nos concede.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Quinta</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domingos (Consagração & EBD) -->
+            <div class="event-item normal" data-day="08" data-month="2" data-year="2026" data-hour="8" data-minute="0">
                 <div class="event-date recurrent">
                     <span>08</span>
-                    <small>Março</small>
+                    <small>MAR</small>
                 </div>
                 <div class="event-details">
                     <h3>Consagração & EBD</h3>
                     <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
                     <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
+                        <span class="tag time">08:00</span> <span class="tag">Consagração</span>
+                        <span class="tag time">09:20</span> <span class="tag">EBD</span>
                     </div>
                 </div>
             </div>
 
-            <div class="event-item">
+            <!-- Segundas (Culto de Ensino) -->
+            <div class="event-item normal" data-day="09" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>09</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Culto de Ensino</h3>
+                    <p>Segunda-feira - mergulhando na Palavra para fortalecer nossa fé.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Segunda</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="12" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>12</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Noite da Vitória</h3>
+                    <p>Culto de quinta-feira - um tempo de celebrar as vitórias que Deus nos concede.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Quinta</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="15" data-month="2" data-year="2026" data-hour="8" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>15</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Consagração & EBD</h3>
+                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
+                    <div class="event-tags">
+                        <span class="tag time">08:00</span> <span class="tag">Consagração</span>
+                        <span class="tag time">09:20</span> <span class="tag">EBD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="16" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>16</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Culto de Ensino</h3>
+                    <p>Segunda-feira - mergulhando na Palavra para fortalecer nossa fé.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Segunda</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="19" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>19</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Noite da Vitória</h3>
+                    <p>Culto de quinta-feira - um tempo de celebrar as vitórias que Deus nos concede.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Quinta</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="22" data-month="2" data-year="2026" data-hour="8" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>22</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Consagração & EBD</h3>
+                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
+                    <div class="event-tags">
+                        <span class="tag time">08:00</span> <span class="tag">Consagração</span>
+                        <span class="tag time">09:20</span> <span class="tag">EBD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="23" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>23</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Culto de Ensino</h3>
+                    <p>Segunda-feira - mergulhando na Palavra para fortalecer nossa fé.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Segunda</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="26" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>26</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Noite da Vitória</h3>
+                    <p>Culto de quinta-feira - um tempo de celebrar as vitórias que Deus nos concede.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Quinta</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="29" data-month="2" data-year="2026" data-hour="8" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>29</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Consagração & EBD</h3>
+                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
+                    <div class="event-tags">
+                        <span class="tag time">08:00</span> <span class="tag">Consagração</span>
+                        <span class="tag time">09:20</span> <span class="tag">EBD</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-item normal" data-day="30" data-month="2" data-year="2026" data-hour="20" data-minute="0">
+                <div class="event-date recurrent">
+                    <span>30</span>
+                    <small>MAR</small>
+                </div>
+                <div class="event-details">
+                    <h3>Culto de Ensino</h3>
+                    <p>Segunda-feira - mergulhando na Palavra para fortalecer nossa fé.</p>
+                    <div class="event-tags">
+                        <span class="tag time">20:00</span>
+                        <span class="tag">Segunda</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evento especial: Noite da Pizza (14/03) -->
+            <div class="event-item" data-day="14" data-month="2" data-year="2026" data-hour="19" data-minute="0">
                 <div class="event-date">
                     <span>14</span>
-                    <small>Março</small>
+                    <small>MAR</small>
                 </div>
                 <div class="event-details">
                     <h3>Noite da Pizza</h3>
@@ -499,55 +745,11 @@
                 </div>
             </div>
 
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>15</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>22</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item normal">
-                <div class="event-date recurrent">
-                    <span>29</span>
-                    <small>Março</small>
-                </div>
-                <div class="event-details">
-                    <h3>Consagração & EBD</h3>
-                    <p>Inicie o seu domingo na presença de Deus buscando a palavra.</p>
-                    <div class="event-tags">
-                        <span class="tag time">08:30</span> <span class="tag">Consagração</span>
-                        <span class="tag time">09:30</span> <span class="tag">EBD</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="event-item">
+            <!-- Culto de Jovens (18/04) - Mantido como exemplo futuro -->
+            <div class="event-item" data-day="18" data-month="3" data-year="2026" data-hour="19" data-minute="30">
                 <div class="event-date">
                     <span>18</span>
-                    <small>Abril</small>
+                    <small>ABR</small>
                 </div>
                 <div class="event-details">
                     <h3>Culto de Jovens</h3>
@@ -595,7 +797,19 @@
                     </details>
                 </div>
             </div>
+        </div>
 
+        <!-- Botão para mostrar eventos passados -->
+        <div class="show-past-container">
+            <button class="show-past-btn" id="showPastBtn" onclick="togglePastEvents()">
+                <span>🔍</span> Mostrar eventos anteriores
+            </button>
+        </div>
+
+        <!-- Mensagem de nenhum evento (aparece se todos passaram) -->
+        <div id="noEventsMessage" class="no-events-message" style="display: none;">
+            <p>📅 Nenhum evento futuro encontrado</p>
+            <small>Clique no botão acima para ver eventos anteriores</small>
         </div>
     </div>
 
@@ -615,20 +829,105 @@
     </div>
 
     <script>
-        // Travar rolagem do body quando o menu lateral estiver aberto
-        const checkbox = document.getElementById('menu-toggle');
-        checkbox.addEventListener('change', function() {
-            document.body.style.overflow = this.checked ? 'hidden' : 'auto';
-        });
+        // DATA E HORA ATUAL (usando o horário do usuário)
+        const now = new Date();
+        
+        // Ajuste: como hoje é 03/03/2026 (terça-feira), vamos simular essa data para teste
+        // Em produção, remover esta linha e usar a data real
+        // const now = new Date(2026, 2, 3, 9, 0, 0); // 03/03/2026 09:00 (já passou da consagração)
+        
+        // Função para verificar se um evento já passou
+        function isEventExpired(day, month, year, hour, minute) {
+            const eventDate = new Date(year, month, day, hour, minute, 0);
+            return eventDate < now;
+        }
 
-        // Efeito exclusivo: fechar o detalhe aberto caso o usuário clique em outro
-        const detailsElements = document.querySelectorAll('details');
-        detailsElements.forEach(targetDetail => {
-            targetDetail.addEventListener('click', () => {
-                detailsElements.forEach(detail => {
-                    if (detail !== targetDetail) {
-                        detail.removeAttribute('open');
+        // Função para atualizar a visibilidade dos eventos
+        function updateEventsVisibility(showPast = false) {
+            const events = document.querySelectorAll('.event-item');
+            let futureEventsCount = 0;
+            
+            events.forEach(event => {
+                const day = parseInt(event.dataset.day);
+                const month = parseInt(event.dataset.month);
+                const year = parseInt(event.dataset.year);
+                const hour = parseInt(event.dataset.hour || 0);
+                const minute = parseInt(event.dataset.minute || 0);
+                
+                const expired = isEventExpired(day, month, year, hour, minute);
+                
+                // Adiciona classe expired se necessário
+                if (expired) {
+                    event.classList.add('expired');
+                    
+                    // Adiciona badge de evento passado se não existir
+                    if (!event.querySelector('.tag.expired-badge')) {
+                        const tagsContainer = event.querySelector('.event-tags');
+                        if (tagsContainer) {
+                            const expiredBadge = document.createElement('span');
+                            expiredBadge.className = 'tag expired-badge';
+                            expiredBadge.textContent = '✅ Já realizado';
+                            tagsContainer.appendChild(expiredBadge);
+                        }
                     }
+                } else {
+                    event.classList.remove('expired');
+                    futureEventsCount++;
+                }
+                
+                // Controla exibição baseado no showPast
+                if (showPast) {
+                    event.style.display = 'flex';
+                } else {
+                    event.style.display = expired ? 'none' : 'flex';
+                }
+            });
+            
+            // Mostra ou esconde mensagem de nenhum evento
+            const noEventsMsg = document.getElementById('noEventsMessage');
+            if (!showPast && futureEventsCount === 0) {
+                noEventsMsg.style.display = 'block';
+            } else {
+                noEventsMsg.style.display = 'none';
+            }
+            
+            // Atualiza texto do botão
+            const showPastBtn = document.getElementById('showPastBtn');
+            if (showPast) {
+                showPastBtn.innerHTML = '<span>🔍</span> Ocultar eventos anteriores';
+            } else {
+                showPastBtn.innerHTML = '<span>🔍</span> Mostrar eventos anteriores';
+            }
+        }
+
+        // Variável de estado para controlar se mostra eventos passados
+        let showingPast = false;
+
+        // Função para alternar visualização de eventos passados
+        window.togglePastEvents = function() {
+            showingPast = !showingPast;
+            updateEventsVisibility(showingPast);
+        };
+
+        // Executa ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateEventsVisibility(false);
+            
+            // Travar rolagem do body quando o menu lateral estiver aberto
+            const checkbox = document.getElementById('menu-toggle');
+            checkbox.addEventListener('change', function() {
+                document.body.style.overflow = this.checked ? 'hidden' : 'auto';
+            });
+
+            // Efeito exclusivo: fechar o detalhe aberto caso o usuário clique em outro
+            const detailsElements = document.querySelectorAll('details');
+            detailsElements.forEach(targetDetail => {
+                targetDetail.addEventListener('click', () => {
+                    detailsElements.forEach(detail => {
+                        if (detail !== targetDetail) {
+                            detail.removeAttribute('open');
+                        }
+                    });
                 });
             });
         });
@@ -637,21 +936,21 @@
         const modal = document.getElementById('passwordModal');
         const pwdInput = document.getElementById('ebdPwd');
 
-        function openModal() {
+        window.openModal = function() {
             modal.style.display = 'flex';
             pwdInput.focus();
             // Fecha o menu hamburguer ao abrir o modal
             document.getElementById('menu-toggle').checked = false;
             document.body.style.overflow = 'hidden';
-        }
+        };
 
-        function closeModal() {
+        window.closeModal = function() {
             modal.style.display = 'none';
             pwdInput.value = '';
             document.body.style.overflow = 'auto';
-        }
+        };
 
-        function confirmPwd() {
+        window.confirmPwd = function() {
             if (pwdInput.value.toLowerCase() === "jesus") {
                 window.location.href = "ebd.html";
             } else {
@@ -659,7 +958,7 @@
                 pwdInput.value = '';
                 pwdInput.focus();
             }
-        }
+        };
 
         // Permite apertar "Enter" para confirmar
         pwdInput.addEventListener("keypress", function(event) {
@@ -667,6 +966,14 @@
                 confirmPwd();
             }
         });
+
+        // Opcional: Atualizar automaticamente a cada minuto (para quando passar do horário)
+        setInterval(function() {
+            // Atualiza a data atual
+            // Nota: em produção, você precisaria redefinir 'now' ou criar uma nova data
+            // Para este exemplo, vamos apenas recarregar a página ou atualizar a data
+            location.reload(); // Recarrega a página para verificar novamente
+        }, 60000); // Verifica a cada minuto
     </script>
 </body>
 </html>
