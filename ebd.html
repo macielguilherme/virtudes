@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ranking EBD | Virtudes</title>
+<title>Ranking EBD | Connection 70×7</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
         * {
@@ -78,7 +78,7 @@
         .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         .main-menu a:hover { color: var(--accent-red); transform: translateX(5px); }
         
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); transition: var(--transition-smooth); z-index: 1500; opacity: 0; visibility: hidden; }
         #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
         /* --- RANKING CONTAINER --- */
@@ -504,7 +504,7 @@
 <body>
 <header class="m3-header">
     <input type="checkbox" id="menu-toggle">
-    <a href="index.html" class="brand-logo">VIRTUDES</a>
+    <a href="index.html" class="brand-logo">CONNECTION 70×7</a>
     <label for="menu-toggle" class="menu-icon-label">
         <div class="line"></div><div class="line"></div><div class="line"></div>
     </label>
@@ -881,4 +881,4 @@ onSnapshot(collection(db, "transacoes"), (snapshot) => {
 render();
 </script>
 </body>
-</html>
+</html
