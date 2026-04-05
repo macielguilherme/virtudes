@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Virtudes | AD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ranking EBD | Connection 70x7</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -19,11 +19,14 @@
             --text-primary: #FFFFFF;
             --text-secondary: #A3A3A3;
             --accent-red: #ef4444;
-            --accent-glow: rgba(239, 68, 68, 0.15);
             --border-light: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(255, 255, 255, 0.15);
             --glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
             --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            
+            --gold: #fbbf24;
+            --silver: #94a3b8;
+            --bronze: #92400e;
         }
 
         body {
@@ -31,10 +34,11 @@
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
+            padding-top: 110px;
+            padding-bottom: 80px;
             background-image: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.03) 0%, transparent 50%);
         }
 
-        /* --- HEADER --- */
         .m3-header {
             background-color: rgba(5, 5, 5, 0.85);
             backdrop-filter: blur(20px);
@@ -52,10 +56,11 @@
         .brand-logo {
             font-size: 1.4rem; font-weight: 800; letter-spacing: -1px;
             text-decoration: none; color: var(--text-primary);
+            order: 1;
         }
 
         #menu-toggle { display: none; }
-        .menu-icon-label { cursor: pointer; z-index: 3000; display: flex; flex-direction: column; gap: 6px; }
+        .menu-icon-label { cursor: pointer; z-index: 3000; display: flex; flex-direction: column; gap: 6px; order: 2; padding: 10px 0; }
         .line { width: 24px; height: 2px; background-color: var(--text-primary); transition: var(--transition-smooth); border-radius: 2px; }
         
         #menu-toggle:checked ~ .menu-icon-label .line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
@@ -68,180 +73,539 @@
             transition: var(--transition-smooth); border-left: 1px solid var(--border-light); z-index: 2000;
         }
         #menu-toggle:checked ~ .main-menu { right: 0; }
-        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: pointer; }
+        .main-menu a { color: var(--text-secondary); text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
         .main-menu a:hover { color: var(--accent-red); transform: translateX(5px); }
         
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1500; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); transition: var(--transition-smooth); z-index: 1500; opacity: 0; visibility: hidden; }
         #menu-toggle:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
-        /* --- CONTEÚDO --- */
-        .informe-container {
-            padding-top: 120px;
-            padding-bottom: 60px;
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(to right, #fff, #a3a3a3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .header-title h1:hover {
+            background: linear-gradient(to right, var(--accent-red), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 0.75rem;
+            color: var(--accent-red);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 12px;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition-smooth);
+            cursor: default;
+            opacity: 0;
+            animation: fadeInUp 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .card.admin-clickable {
+            cursor: pointer;
+        }
+
+        .card.admin-clickable:hover {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-color: var(--accent-red);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px -10px rgba(239,68,68,0.3);
+        }
+
+        .card.rank-0 { border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.05); }
+        .card.rank-0:hover { border-color: var(--gold); box-shadow: 0 15px 35px -10px rgba(251, 191, 36, 0.2); }
+        .card.rank-1 { border-color: rgba(148, 163, 184, 0.4); background: rgba(148, 163, 184, 0.05); }
+        .card.rank-1:hover { border-color: var(--silver); box-shadow: 0 15px 35px -10px rgba(148, 163, 184, 0.2); }
+        .card.rank-2 { border-color: rgba(146, 64, 14, 0.4); background: rgba(146, 64, 14, 0.05); }
+        .card.rank-2:hover { border-color: var(--bronze); box-shadow: 0 15px 35px -10px rgba(146, 64, 14, 0.2); }
+
+        .rank-info { display: flex; align-items: center; gap: 15px; }
+        .pos { font-weight: 800; font-size: 1rem; color: var(--text-secondary); min-width: 35px; }
+        .card.rank-0 .pos { color: var(--gold); }
+        .card.rank-1 .pos { color: var(--silver); }
+        .card.rank-2 .pos { color: var(--bronze); }
+        .name { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; }
+        .points { font-weight: 800; font-size: 1.3rem; color: var(--text-primary); background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--border-light); }
+
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 5000; transition: opacity 0.3s ease;
+        }
+        .modal.hidden { opacity: 0; pointer-events: none; }
+        .modal-content {
+            background: var(--bg-secondary); border: 1px solid var(--border-light); width: 90%; max-width: 500px;
+            border-radius: 32px; padding: 40px 30px; transform: scale(1); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
+        }
+        .modal.hidden .modal-content { transform: scale(0.9); }
+        .modal-content h3 { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(to right, #fff, #a3a3a3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-content h4 { text-align: center; color: var(--text-secondary); font-weight: 400; margin-bottom: 25px; font-size: 0.9rem; }
+        .modal-content input { width: 100%; padding: 18px; border-radius: 16px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); color: white; text-align: center; font-size: 1.2rem; font-weight: 500; outline: none; transition: 0.3s; margin-bottom: 15px; }
+        .modal-content input:focus { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.05); }
+        .error-message { color: var(--accent-red); font-size: 0.85rem; text-align: center; margin: 10px 0; min-height: 20px; }
+
+        .criterios-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0 10px 0;
+        }
+        .criterio-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .criterio-item:hover { border-color: var(--accent-red); transform: translateY(-2px); background: rgba(239, 68, 68, 0.1); }
+        .criterio-item.selecionado { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .criterio-nome { font-weight: 700; font-size: 0.9rem; margin-bottom: 5px; color: var(--text-primary); }
+        .criterio-pontos { font-weight: 800; font-size: 1.4rem; color: var(--accent-red); }
+        
+        .valor-destaque {
+            text-align: center;
+            background: rgba(239,68,68,0.1);
+            border-radius: 20px;
+            padding: 12px;
+            margin: 10px 0 5px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border: 1px dashed var(--accent-red);
+        }
+        .valor-destaque span {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-red);
+            margin-left: 10px;
+        }
+
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .btn-primary { background: white; color: black; border: none; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition-smooth); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(255,255,255,0.3); }
+        .btn-secondary { background: transparent; color: white; border: 1px solid var(--border-light); padding: 16px; border-radius: 16px; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: var(--text-secondary); }
+
+        .admin-panel-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0 20px;
+            flex-wrap: wrap;
+        }
+        .admin-action-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+        }
+        .admin-action-btn:hover { background: var(--accent-red); color: white; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
+        .reset-btn { border-color: #ff4444; color: #ff8888; }
+        .reset-btn:hover { background: #ff4444; color: white; }
+        .history-btn { border-color: #3b82f6; color: #60a5fa; }
+        .history-btn:hover { background: #3b82f6; color: white; }
+
+        .historico-lista {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .historico-item {
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--accent-red);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        .historico-item strong { color: var(--accent-red); }
+        .historico-data { font-size: 0.7rem; color: var(--text-secondary); margin-top: 6px; }
+        .empty-history { text-align: center; color: var(--text-secondary); padding: 30px; font-style: italic; }
+
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            font-size: 24px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+            transition: var(--transition-smooth);
+            z-index: 800;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-left: 6%;
-            padding-right: 6%;
+        }
+        .help-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5); }
+
+        .admin-status {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-red); font-size: 10px; padding: 8px 20px;
+            border-radius: 30px; text-transform: uppercase; font-weight: 800;
+            letter-spacing: 1px; display: none; z-index: 900;
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3); border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .content-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            max-width: 1100px;
-            width: 100%;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .details-side {
-            flex: 1 1 450px;
+        .tabela-criterios {
+            margin-top: 40px;
             background: var(--glass-bg);
             border: 1px solid var(--border-light);
-            border-radius: 32px;
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .image-side {
-            flex: 1 1 400px;
-            display: flex;
-        }
-
-        .informe-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
             border-radius: 24px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            padding: 25px;
         }
+        .tabela-criterios h3 { font-size: 1.3rem; margin-bottom: 20px; color: var(--text-primary); text-align: center; letter-spacing: -0.5px; }
+        .tabela-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .tabela-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--border-light); transition: var(--transition-smooth); }
+        .tabela-item:hover { border-color: var(--accent-red); transform: translateX(5px); }
+        .tabela-nome { font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; }
+        .tabela-valor { font-weight: 800; color: var(--accent-red); font-size: 1.2rem; }
 
-        /* --- TEXTOS --- */
-        .info-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: var(--accent-red); margin-bottom: 20px; display: block; }
-        .event-card h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; margin-bottom: 10px; }
-        
-        .meta-grid { margin: 35px 0; padding: 30px 0; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); display: grid; gap: 25px; }
-        .meta-item b { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--accent-red); margin-bottom: 8px; letter-spacing: 0.1em; font-weight: 800; }
-        .meta-item p { font-size: 1.1rem; color: var(--text-primary); font-weight: 500; }
-
-        .bible-quote p { font-size: 1rem; line-height: 1.6; color: var(--text-secondary); font-style: italic; }
-        .bible-quote span { display: block; margin-top: 12px; font-size: 0.75rem; font-weight: 700; color: var(--text-primary); }
-
-        /* --- MODAL DE SENHA --- */
-        .modal-pwd { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center; z-index: 5000; }
-        .modal-pwd.active { display: flex; }
-        .modal-pwd-card { background: var(--bg-secondary); border: 1px solid var(--border-light); padding: 35px; border-radius: 28px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow); }
-        .modal-pwd-card input { width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); border-radius: 14px; color: #fff; text-align: center; font-size: 1.1rem; margin-bottom: 20px; outline: none; }
-        .btn-entrar { width: 100%; padding: 16px; background: var(--accent-red); color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; }
-
-        /* --- RESPONSIVIDADE (IMAGE FIRST ON MOBILE) --- */
-        @media (max-width: 968px) {
-            .content-wrapper {
-                flex-direction: column-reverse; /* Isso faz a imagem subir e o texto descer */
-            }
-            .details-side { padding: 40px 30px; }
-            .informe-container { padding-top: 100px; }
-            .image-side { width: 100%; height: 350px; } /* Ajuste de altura para mobile */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .card { padding: 16px 20px; border-radius: 20px; }
+            .name { font-size: 1rem; }
+            .points { font-size: 1.1rem; padding: 6px 12px; }
+            .pos { min-width: 30px; }
+            .criterios-grid { grid-template-columns: 1fr; }
+            .modal-content { padding: 30px 20px; }
+            .tabela-grid { grid-template-columns: 1fr; }
+            .tabela-item { padding: 12px 15px; }
         }
     </style>
 </head>
 <body>
+<header class="m3-header">
+    <input type="checkbox" id="menu-toggle">
+    <a href="#" class="brand-logo">CONNECTION 70x7</a>
+    <label for="menu-toggle" class="menu-icon-label">
+        <div class="line"></div><div class="line"></div><div class="line"></div>
+    </label>
+    <label for="menu-toggle" class="menu-overlay"></label>
+    <nav class="main-menu">
+        <a href="#">Inicio</a>
+        <a href="#" style="color: var(--accent-red);">Ranking da EBD</a>
+        <a href="#">Programacao</a>
+    </nav>
+</header>
 
-    <div id="pwdModal" class="modal-pwd">
-        <div class="modal-pwd-card">
-            <h2 style="margin-bottom:10px">Acesso Restrito</h2>
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:25px">Digite a senha para ver o Ranking</p>
-            <input type="password" id="inputSenha" placeholder="Senha">
-            <button class="btn-entrar" onclick="validarSenha()">Entrar</button>
-            <span style="display:block; margin-top:15px; font-size:0.75rem; color:var(--text-secondary); cursor:pointer; text-decoration:underline" onclick="toggleModal(false)">Voltar</span>
-        </div>
+<div class="container">
+    <div class="header-title">
+        <p>Escola Biblica Dominical</p>
+        <h1 id="titulo">RANKING GERAL</h1>
     </div>
 
-    <header class="m3-header">
-        <input type="checkbox" id="menu-toggle">
-        <a href="index.html" class="brand-logo">Virtudes</a>
-        <label for="menu-toggle" class="menu-icon-label">
-            <div class="line"></div><div class="line"></div><div class="line"></div>
-        </label>
-        <label for="menu-toggle" class="menu-overlay"></label>
-        <nav class="main-menu">
-            <a href="index.html" style="color: var(--accent-red);">Início</a>
-            <a onclick="toggleModal(true)">Ranking da EBD</a>
-            <a href="programacao.html">Programação</a>
-        </nav>
-    </header>
+    <div id="admin-buttons-container" class="admin-panel-buttons" style="display: none;">
+        <button class="admin-action-btn history-btn" id="btn-historico">HISTORICO DE PONTOS</button>
+        <button class="admin-action-btn reset-btn" id="btn-resetar">ZERAR TODOS OS PONTOS</button>
+    </div>
 
-    <main class="informe-container">
-        <div class="content-wrapper">
-            <div class="details-side">
-                <span class="info-tag">Informações Principais</span>
-                <div class="event-card">
-                    <h1>NOITE DA <span style="color: var(--accent-red);">PIZZA</span></h1>
-                    <p style="font-weight: 500; color: var(--text-secondary); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.8rem;">Comunhão & Jogos</p>
-                </div>
+    <div id="ranking" class="ranking-list"></div>
 
-                <div class="meta-grid">
-                    <div class="meta-item">
-                        <b>Quando será?</b>
-                        <p>14 de Março — 16:00h</p>
-                    </div>
-                    <div class="meta-item">
-                        <b>Onde nos encontrar?</b>
-                        <p>AD Samambaia Sul <br><small style="color:var(--text-secondary); font-weight: 400;">QN 313 CONJ. E LT. 01</small></p>
-                    </div>
-                </div>
-
-                <div class="bible-quote">
-                    <p>"Portanto, quer comais, quer bebais ou façais outra qualquer coisa, fazei tudo para a glória de Deus"</p>
-                    <span>1 CORÍNTIOS 10:31</span>
-                </div>
-            </div>
-
-            <div class="image-side">
-                <img src="pizza.jpg" alt="Noite da Pizza" class="informe-img">
-            </div>
+    <div class="tabela-criterios">
+        <h3>Criterios de Pontuacao - 1 Semestre</h3>
+        <div class="tabela-grid">
+            <div class="tabela-item"><span class="tabela-nome">Quiz</span><span class="tabela-valor">5 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Pergunta Biblica (criar)</span><span class="tabela-valor">20 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Convidar nao crente</span><span class="tabela-valor">50 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Cultos (segunda/quinta)</span><span class="tabela-valor">15 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Oracao domingo</span><span class="tabela-valor">10 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Ligacao no grupo</span><span class="tabela-valor">5 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Nao ter atraso</span><span class="tabela-valor">1 pt</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Professor na EBD</span><span class="tabela-valor">50 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Dirigir/pregar culto jovem</span><span class="tabela-valor">100 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Perguntas da licao EBD</span><span class="tabela-valor">10 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Devocional do Dia</span><span class="tabela-valor">5 pts</span></div>
         </div>
-    </main>
+    </div>
+</div>
 
-    <script>
-        const modal = document.getElementById('pwdModal');
-        const input = document.getElementById('inputSenha');
+<button class="help-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})">?</button>
+<div id="admin-indicator" class="admin-status">MODO ADMIN ATIVO</div>
 
-        function toggleModal(show) {
-            if(show) {
-                modal.classList.add('active');
-                document.getElementById('menu-toggle').checked = false;
-                input.focus();
-            } else {
-                modal.classList.remove('active');
-                input.value = '';
-            }
-        }
+<div id="modal-auth" class="modal hidden"><div class="modal-content"><h3>Acesso Admin</h3><input type="password" id="senha1" placeholder="Digite sua senha"><div id="auth-error" class="error-message"></div><div class="modal-actions"><button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button><button class="btn-primary" onclick="processarAuth()">Continuar</button></div></div></div>
 
-        function validarSenha() {
-            if (input.value.toLowerCase() === "jesus") {
-                window.location.href = "ebd.html";
-            } else {
-                alert("Senha incorreta!");
-                input.value = '';
-            }
-        }
+<div id="modal-pontos" class="modal modal-pontos hidden">
+    <div class="modal-content">
+        <h3 id="modal-nome">Nome do Aluno</h3>
+        <h4>Selecione o criterio</h4>
+        <div class="criterios-grid" id="criteriosGrid"></div>
+        <div id="valor-dinamico" class="valor-destaque" style="display: none;">
+            Valor desta acao: <span id="pontos-selecionados">0</span> pts
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" onclick="fecharModalPontos()">Cancelar</button>
+            <button class="btn-primary" onclick="confirmarPontos()">Salvar</button>
+        </div>
+    </div>
+</div>
 
-        document.getElementById('menu-toggle').addEventListener('change', function() {
-            document.body.style.overflow = this.checked ? 'hidden' : 'auto';
+<div id="modal-historico" class="modal hidden"><div class="modal-content"><h3>HISTORICO DE PONTUACOES</h3><div id="historico-lista" class="historico-lista"></div><div class="modal-actions"><button class="btn-primary" onclick="fecharModalHistorico()">Fechar</button></div></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, writeBatch, query, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
+    authDomain: "ranking-jovens-d17d6.firebaseapp.com",
+    projectId: "ranking-jovens-d17d6",
+    storageBucket: "ranking-jovens-d17d6.firebasestorage.app",
+    messagingSenderId: "523093300634",
+    appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let modoAdmin = false;
+let participanteAtual = null;
+let transacoes = [];
+
+const criterios = [
+    { id: 'quiz', nome: 'Quiz', pontos: 5 },
+    { id: 'pergunta_biblica', nome: 'Pergunta Biblica', pontos: 20 },
+    { id: 'convidado', nome: 'Convidar nao crente', pontos: 50 },
+    { id: 'culto_segunda', nome: 'Culto Segunda', pontos: 15 },
+    { id: 'culto_quinta', nome: 'Culto Quinta', pontos: 15 },
+    { id: 'oracao_domingo', nome: 'Oracao Domingo', pontos: 10 },
+    { id: 'ligacao_grupo', nome: 'Ligacao no grupo', pontos: 5 },
+    { id: 'sem_atraso', nome: 'Nao ter atraso', pontos: 1 },
+    { id: 'professor_ebd', nome: 'Professor na EBD', pontos: 50 },
+    { id: 'dirigir_culto', nome: 'Dirigir/pregar culto', pontos: 100 },
+    { id: 'pergunta_licao', nome: 'Perguntas da licao', pontos: 10 },
+    { id: 'devocional_dia', nome: 'Devocional do Dia', pontos: 5 }
+];
+
+const participantes = [
+    {id: 1, nome: 'Ester'}, {id: 2, nome: 'Isabelle'}, {id: 3, nome: 'Flavia'},
+    {id: 4, nome: 'Julia'}, {id: 5, nome: 'Geovana'}, {id: 6, nome: 'Joao'},
+    {id: 7, nome: 'Pedro'}, {id: 8, nome: 'Moises'}, {id: 9, nome: 'Miguel'},
+    {id: 10, nome: 'Mariana'}, {id: 11, nome: 'Mateus'}, {id: 12, nome: 'Davi'},
+    {id: 13, nome: 'Guilherme'}
+];
+
+const rankingDiv = document.getElementById("ranking");
+const titulo = document.getElementById("titulo");
+const indicator = document.getElementById("admin-indicator");
+const modalAuth = document.getElementById('modal-auth');
+const modalPontos = document.getElementById('modal-pontos');
+const modalHistorico = document.getElementById('modal-historico');
+const historicoLista = document.getElementById('historico-lista');
+const senha1 = document.getElementById('senha1');
+const authError = document.getElementById('auth-error');
+const criteriosGrid = document.getElementById('criteriosGrid');
+const adminButtonsDiv = document.getElementById('admin-buttons-container');
+const valorDinamicoDiv = document.getElementById('valor-dinamico');
+const pontosSelecionadosSpan = document.getElementById('pontos-selecionados');
+
+function preencherCriteriosGrid() {
+    criteriosGrid.innerHTML = criterios.map(crit => `
+        <div class="criterio-item" onclick="selecionarCriterio('${crit.id}')" data-criterio="${crit.id}" data-pontos="${crit.pontos}">
+            <div class="criterio-nome">${crit.nome}</div>
+            <div class="criterio-pontos">+${crit.pontos}</div>
+        </div>
+    `).join('');
+}
+preencherCriteriosGrid();
+
+window.selecionarCriterio = function(criterioId) {
+    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
+    const elemento = document.querySelector(`[data-criterio="${criterioId}"]`);
+    if (elemento) {
+        elemento.classList.add('selecionado');
+        const pontos = parseInt(elemento.getAttribute('data-pontos'));
+        pontosSelecionadosSpan.innerText = pontos;
+        valorDinamicoDiv.style.display = 'block';
+    }
+    window.criterioSelecionado = criterioId;
+}
+
+async function hashSenha(senha) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(senha);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+window.abrirModalAuth = function() {
+    senha1.value = '';
+    authError.innerText = '';
+    modalAuth.classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+window.fecharModalAuth = () => { modalAuth.classList.add("hidden"); document.body.style.overflow = 'auto'; }
+
+window.processarAuth = async function() {
+    const senha = senha1.value.trim();
+    if (!senha) { authError.innerText = "Digite uma senha!"; return; }
+    try {
+        const docSnap = await getDoc(doc(db, "config", "admin"));
+        if (!docSnap.exists()) { authError.innerText = "Admin nao configurado."; return; }
+        const senhasArray = docSnap.data().senhas || [];
+        const hashDigitado = await hashSenha(senha);
+        if (senhasArray.includes(hashDigitado)) {
+            modoAdmin = true;
+            indicator.style.display = "block";
+            adminButtonsDiv.style.display = "flex";
+            fecharModalAuth();
+            render();
+        } else { authError.innerText = "Senha incorreta!"; }
+    } catch (error) { authError.innerText = "Erro na autenticacao."; }
+}
+
+titulo.addEventListener("click", () => abrirModalAuth());
+
+window.adicionar = function(id) {
+    if (!modoAdmin) return;
+    participanteAtual = id;
+    const participante = participantes.find(p => p.id == id);
+    document.getElementById("modal-nome").innerText = participante.nome;
+    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
+    valorDinamicoDiv.style.display = 'none';
+    window.criterioSelecionado = null;
+    modalPontos.classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+
+window.fecharModalPontos = () => { modalPontos.classList.add("hidden"); document.body.style.overflow = 'auto'; }
+
+window.confirmarPontos = async function() {
+    if (!window.criterioSelecionado) { alert("Selecione um criterio!"); return; }
+    const criterio = criterios.find(c => c.id === window.criterioSelecionado);
+    if (!criterio) return;
+    try {
+        await addDoc(collection(db, "transacoes"), {
+            participante_id: participanteAtual,
+            valor: criterio.pontos,
+            criterio: criterio.id,
+            nome_criterio: criterio.nome,
+            data: new Date().toISOString()
         });
+        fecharModalPontos();
+    } catch (error) { alert("Erro ao salvar pontos."); }
+}
 
-        input.addEventListener("keyup", (e) => { if(e.key === "Enter") validarSenha(); });
-    </script>
+window.resetarPontos = async function() {
+    if (!modoAdmin) return;
+    const confirmar = confirm("ATENCAO: Isso ira ZERAR a pontuacao de TODOS os alunos. Esta acao nao pode ser desfeita. Deseja continuar?");
+    if (!confirmar) return;
+    try {
+        const q = query(collection(db, "transacoes"));
+        const querySnapshot = await getDocs(q);
+        const batch = writeBatch(db);
+        querySnapshot.forEach((docRef) => { batch.delete(docRef.ref); });
+        await batch.commit();
+        await addDoc(collection(db, "transacoes"), {
+            participante_id: 0,
+            valor: 0,
+            criterio: "reset_global",
+            nome_criterio: "SISTEMA: Todos os pontos zerados",
+            data: new Date().toISOString()
+        });
+        alert("Todos os pontos foram zerados com sucesso!");
+    } catch (error) { console.error(error); alert("Erro ao resetar pontos. Tente novamente."); }
+}
+
+window.mostrarHistorico = function() {
+    if (!modoAdmin) return;
+    if (transacoes.length === 0) {
+        historicoLista.innerHTML = '<div class="empty-history">Nenhuma movimentacao registrada ainda.</div>';
+    } else {
+        const historicoOrdenado = [...transacoes].reverse();
+        historicoLista.innerHTML = historicoOrdenado.map(t => {
+            const participante = participantes.find(p => p.id === t.participante_id);
+            const nomeParticipante = participante ? participante.nome : (t.participante_id === 0 ? "SISTEMA" : "Desconhecido");
+            const dataFormatada = t.data ? new Date(t.data).toLocaleString('pt-BR') : "Data nao registrada";
+            let detalhe = "";
+            if (t.criterio === "reset_global") detalhe = "RESET GERAL DE PONTOS";
+            else detalhe = `+${t.valor} pts (${t.nome_criterio || t.criterio})`;
+            return `<div class="historico-item"><strong>${nomeParticipante}</strong> — ${detalhe}<div class="historico-data">Data: ${dataFormatada}</div></div>`;
+        }).join('');
+    }
+    modalHistorico.classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+
+window.fecharModalHistorico = () => { modalHistorico.classList.add("hidden"); document.body.style.overflow = 'auto'; }
+
+function render() {
+    const ranking = participantes.map(p => {
+        const soma = transacoes.filter(t => t.participante_id === p.id && t.criterio !== "reset_global").reduce((acc, t) => acc + t.valor, 0);
+        return { ...p, pontos: soma };
+    }).sort((a, b) => b.pontos - a.pontos);
+    rankingDiv.innerHTML = ranking.map((p, i) => `
+        <div class="card rank-${i} ${modoAdmin ? 'admin-clickable' : ''}" 
+             onclick="${modoAdmin ? `adicionar(${p.id})` : ''}"
+             style="animation-delay: ${0.1 + i * 0.05}s">
+            <div class="rank-info"><span class="pos">${i + 1}º</span><span class="name">${p.nome}</span></div>
+            <strong class="points">${p.pontos}</strong>
+        </div>
+    `).join("");
+}
+
+onSnapshot(collection(db, "transacoes"), (snapshot) => {
+    transacoes = snapshot.docs.map(doc => doc.data());
+    render();
+}, (error) => { rankingDiv.innerHTML = '<div style="text-align:center;color:var(--accent-red);">Erro ao carregar dados.</div>'; });
+
+document.getElementById("btn-resetar")?.addEventListener("click", resetarPontos);
+document.getElementById("btn-historico")?.addEventListener("click", mostrarHistorico);
+render();
+</script>
 </body>
 </html>
