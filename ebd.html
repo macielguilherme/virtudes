@@ -372,6 +372,91 @@
             border-color: var(--text-secondary);
         }
 
+        /* --- BOTÕES ADMIN NO PAINEL --- */
+        .admin-panel-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0 20px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-action-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-action-btn:hover {
+            background: var(--accent-red);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239,68,68,0.3);
+        }
+        
+        .reset-btn {
+            border-color: #ff4444;
+            color: #ff8888;
+        }
+        
+        .reset-btn:hover {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .history-btn {
+            border-color: #3b82f6;
+            color: #60a5fa;
+        }
+        
+        .history-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* --- HISTÓRICO (MODAL) --- */
+        .historico-lista {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .historico-item {
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--accent-red);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .historico-item strong {
+            color: var(--accent-red);
+        }
+        
+        .historico-data {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+        
+        .empty-history {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 30px;
+            font-style: italic;
+        }
+
         /* --- BOTÃO FLUTUANTE --- */
         .help-btn {
             position: fixed;
@@ -504,15 +589,15 @@
 <body>
 <header class="m3-header">
     <input type="checkbox" id="menu-toggle">
-    <a href="index.html" class="brand-logo">CONNECTION 70×7</a>
+    <a href="#" class="brand-logo">CONNECTION 70×7</a>
     <label for="menu-toggle" class="menu-icon-label">
         <div class="line"></div><div class="line"></div><div class="line"></div>
     </label>
     <label for="menu-toggle" class="menu-overlay"></label>
     <nav class="main-menu">
-        <a href="index.html">Início</a>
-        <a href="ebd.html" style="color: var(--accent-red);">Ranking da EBD</a>
-        <a href="programacao.html">Programação</a>
+        <a href="#">Início</a>
+        <a href="#" style="color: var(--accent-red);">Ranking da EBD</a>
+        <a href="#">Programação</a>
     </nav>
 </header>
 
@@ -522,98 +607,50 @@
         <h1 id="titulo">RANKING GERAL</h1>
     </div>
 
+    <!-- Painel de Admin com botões extras -->
+    <div id="admin-buttons-container" class="admin-panel-buttons" style="display: none;">
+        <button class="admin-action-btn history-btn" id="btn-historico">📜 HISTÓRICO DE PONTOS</button>
+        <button class="admin-action-btn reset-btn" id="btn-resetar">⚠️ ZERAR TODOS OS PONTOS</button>
+    </div>
+
     <!-- Lista de ranking -->
     <div id="ranking" class="ranking-list"></div>
 
-    <!-- Tabela de critérios -->
+    <!-- Tabela de critérios (inclui novo critério) -->
     <div class="tabela-criterios">
         <h3>Critérios de Pontuação - 1º Semestre</h3>
         <div class="tabela-grid">
-            <div class="tabela-item">
-                <span class="tabela-nome">Quiz</span>
-                <span class="tabela-valor">5 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Pergunta Bíblica (criar)</span>
-                <span class="tabela-valor">20 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Convidar não crente</span>
-                <span class="tabela-valor">50 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Cultos (segunda/quinta)</span>
-                <span class="tabela-valor">15 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Oração domingo</span>
-                <span class="tabela-valor">10 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Ligação no grupo</span>
-                <span class="tabela-valor">5 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Não ter atraso</span>
-                <span class="tabela-valor">1 pt</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Professor na EBD</span>
-                <span class="tabela-valor">50 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Dirigir/pregar culto jovem</span>
-                <span class="tabela-valor">100 pts</span>
-            </div>
-            <div class="tabela-item">
-                <span class="tabela-nome">Perguntas da lição EBD</span>
-                <span class="tabela-valor">10 pts</span>
-            </div>
+            <div class="tabela-item"><span class="tabela-nome">Quiz</span><span class="tabela-valor">5 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Pergunta Bíblica (criar)</span><span class="tabela-valor">20 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Convidar não crente</span><span class="tabela-valor">50 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Cultos (segunda/quinta)</span><span class="tabela-valor">15 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Oração domingo</span><span class="tabela-valor">10 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Ligação no grupo</span><span class="tabela-valor">5 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Não ter atraso</span><span class="tabela-valor">1 pt</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Professor na EBD</span><span class="tabela-valor">50 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Dirigir/pregar culto jovem</span><span class="tabela-valor">100 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Perguntas da lição EBD</span><span class="tabela-valor">10 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">📖 DEVOCIONAL DO DIA</span><span class="tabela-valor">5 pts</span></div>
         </div>
     </div>
 </div>
 
-<!-- Botão de ajuda flutuante -->
 <button class="help-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})">?</button>
-
 <div id="admin-indicator" class="admin-status">MODO ADMIN ATIVO</div>
 
 <!-- Modal de Autenticação Admin -->
-<div id="modal-auth" class="modal hidden">
-    <div class="modal-content">
-        <h3 id="auth-title">Acesso Admin</h3>
-        <input type="password" id="senha1" placeholder="Digite sua senha">
-        <input type="password" id="senha2" placeholder="Confirme a senha" style="display: none;">
-        <div id="auth-error" class="error-message"></div>
-        <div class="modal-actions">
-            <button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button>
-            <button class="btn-primary" onclick="processarAuth()">Continuar</button>
-        </div>
-    </div>
-</div>
+<div id="modal-auth" class="modal hidden"><div class="modal-content"><h3>Acesso Admin</h3><input type="password" id="senha1" placeholder="Digite sua senha"><div id="auth-error" class="error-message"></div><div class="modal-actions"><button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button><button class="btn-primary" onclick="processarAuth()">Continuar</button></div></div></div>
 
 <!-- Modal de Adicionar Pontos -->
-<div id="modal-pontos" class="modal modal-pontos hidden">
-    <div class="modal-content">
-        <h3 id="modal-nome">Nome do Aluno</h3>
-        <h4>Selecione o critério</h4>
-        
-        <div class="criterios-grid" id="criteriosGrid">
-            <!-- Será preenchido via JavaScript -->
-        </div>
-        
-        <div class="modal-actions">
-            <button class="btn-secondary" onclick="fecharModalPontos()">Cancelar</button>
-            <button class="btn-primary" onclick="confirmarPontos()">Salvar</button>
-        </div>
-    </div>
-</div>
+<div id="modal-pontos" class="modal modal-pontos hidden"><div class="modal-content"><h3 id="modal-nome">Nome</h3><h4>Selecione o critério</h4><div class="criterios-grid" id="criteriosGrid"></div><div class="modal-actions"><button class="btn-secondary" onclick="fecharModalPontos()">Cancelar</button><button class="btn-primary" onclick="confirmarPontos()">Salvar</button></div></div></div>
+
+<!-- Modal de Histórico -->
+<div id="modal-historico" class="modal hidden"><div class="modal-content"><h3>HISTÓRICO DE PONTUAÇÕES</h3><div id="historico-lista" class="historico-lista"></div><div class="modal-actions"><button class="btn-primary" onclick="fecharModalHistorico()">Fechar</button></div></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Configuração do Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyAeHHx4PPbBayDIicW-ZVRqnf9OqAlUbBw",
     authDomain: "ranking-jovens-d17d6.firebaseapp.com",
@@ -623,17 +660,14 @@ const firebaseConfig = {
     appId: "1:523093300634:web:9fbfad3cb992e109a9d623"
 };
 
-// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Estado da aplicação
 let modoAdmin = false;
 let participanteAtual = null;
 let transacoes = [];
 
-
-// Critérios de pontuação (exatamente como solicitado)
+// NOVO CRITÉRIO: DEVOCIONAL DO DIA (5 pontos)
 const criterios = [
     { id: 'quiz', nome: 'Quiz', pontos: 5 },
     { id: 'pergunta_biblica', nome: 'Pergunta Bíblica', pontos: 20 },
@@ -645,40 +679,30 @@ const criterios = [
     { id: 'sem_atraso', nome: 'Não ter atraso', pontos: 1 },
     { id: 'professor_ebd', nome: 'Professor na EBD', pontos: 50 },
     { id: 'dirigir_culto', nome: 'Dirigir/prestar culto', pontos: 100 },
-    { id: 'pergunta_licao', nome: 'Perguntas da lição', pontos: 10 }
+    { id: 'pergunta_licao', nome: 'Perguntas da lição', pontos: 10 },
+    { id: 'devocional_dia', nome: 'Devocional do Dia', pontos: 5 }
 ];
 
-// Lista de participantes (13 alunos)
 const participantes = [
-    {id: 1, nome: 'Ester'},
-    {id: 2, nome: 'Isabelle'},
-    {id: 3, nome: 'Flavia'},
-    {id: 4, nome: 'Julia'},
-    {id: 5, nome: 'Geovana'},
-    {id: 6, nome: 'João'},
-    {id: 7, nome: 'Pedro'},
-    {id: 8, nome: 'Moises'},
-    {id: 9, nome: 'Miguel'},
-    {id: 10, nome: 'Mariana'},
-    {id: 11, nome: 'Mateus'},
-    {id: 12, nome: 'Davi'},
+    {id: 1, nome: 'Ester'}, {id: 2, nome: 'Isabelle'}, {id: 3, nome: 'Flavia'},
+    {id: 4, nome: 'Julia'}, {id: 5, nome: 'Geovana'}, {id: 6, nome: 'João'},
+    {id: 7, nome: 'Pedro'}, {id: 8, nome: 'Moises'}, {id: 9, nome: 'Miguel'},
+    {id: 10, nome: 'Mariana'}, {id: 11, nome: 'Mateus'}, {id: 12, nome: 'Davi'},
     {id: 13, nome: 'Guilherme'}
 ];
 
-// Elementos DOM
 const rankingDiv = document.getElementById("ranking");
 const titulo = document.getElementById("titulo");
 const indicator = document.getElementById("admin-indicator");
-const checkbox = document.getElementById('menu-toggle');
 const modalAuth = document.getElementById('modal-auth');
 const modalPontos = document.getElementById('modal-pontos');
-const authTitle = document.getElementById('auth-title');
+const modalHistorico = document.getElementById('modal-historico');
+const historicoLista = document.getElementById('historico-lista');
 const senha1 = document.getElementById('senha1');
-const senha2 = document.getElementById('senha2');
 const authError = document.getElementById('auth-error');
 const criteriosGrid = document.getElementById('criteriosGrid');
+const adminButtonsDiv = document.getElementById('admin-buttons-container');
 
-// Preencher grid de critérios
 function preencherCriteriosGrid() {
     criteriosGrid.innerHTML = criterios.map(crit => `
         <div class="criterio-item" onclick="selecionarCriterio('${crit.id}')" data-criterio="${crit.id}">
@@ -687,32 +711,15 @@ function preencherCriteriosGrid() {
         </div>
     `).join('');
 }
-
 preencherCriteriosGrid();
 
-// Selecionar critério no modal
 window.selecionarCriterio = function(criterioId) {
-    // Remover seleção anterior
-    document.querySelectorAll('.criterio-item').forEach(item => {
-        item.classList.remove('selecionado');
-    });
-    
-    // Adicionar seleção no novo critério
+    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
     const elemento = document.querySelector(`[data-criterio="${criterioId}"]`);
-    if (elemento) {
-        elemento.classList.add('selecionado');
-    }
-    
-    // Armazenar critério selecionado
+    if (elemento) elemento.classList.add('selecionado');
     window.criterioSelecionado = criterioId;
 }
 
-// Travar rolagem do body quando o menu lateral estiver aberto
-checkbox.addEventListener('change', function() {
-    document.body.style.overflow = this.checked ? 'hidden' : 'auto';
-});
-
-// Função para criar hash SHA-256 da senha
 async function hashSenha(senha) {
     const encoder = new TextEncoder();
     const data = encoder.encode(senha);
@@ -721,106 +728,51 @@ async function hashSenha(senha) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-
-
-// Função para abrir modal de autenticação
-window.abrirModalAuth = async function() {
-    authTitle.innerText = 'Login Admin';
-    senha2.style.display = "none";
-    senha1.placeholder = "Digite sua senha";
-
+window.abrirModalAuth = function() {
     senha1.value = '';
-    senha2.value = '';
     authError.innerText = '';
-
     modalAuth.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
 }
-       
-window.fecharModalAuth = function() {
-    modalAuth.classList.add("hidden");
-    document.body.style.overflow = 'auto';
-}
+window.fecharModalAuth = () => { modalAuth.classList.add("hidden"); document.body.style.overflow = 'auto'; }
 
-// Processar autenticação (criação ou login)
 window.processarAuth = async function() {
     const senha = senha1.value.trim();
-
-    if (!senha) {
-        authError.innerText = "Digite uma senha!";
-        return;
-    }
-
+    if (!senha) { authError.innerText = "Digite uma senha!"; return; }
     try {
         const docSnap = await getDoc(doc(db, "config", "admin"));
-
-        if (!docSnap.exists()) {
-            authError.innerText = "Configuração de admin não encontrada.";
-            return;
-        }
-
+        if (!docSnap.exists()) { authError.innerText = "Admin não configurado."; return; }
         const senhasArray = docSnap.data().senhas || [];
-
-        if (!Array.isArray(senhasArray) || senhasArray.length === 0) {
-            authError.innerText = "Nenhuma senha configurada.";
-            return;
-        }
-
         const hashDigitado = await hashSenha(senha);
-
         if (senhasArray.includes(hashDigitado)) {
             modoAdmin = true;
             indicator.style.display = "block";
+            adminButtonsDiv.style.display = "flex";
             fecharModalAuth();
             render();
-        } else {
-            authError.innerText = "Senha incorreta!";
-        }
-
-    } catch (error) {
-        console.error("Erro no login:", error);
-        authError.innerText = "Erro ao verificar senha.";
-    }
+        } else { authError.innerText = "Senha incorreta!"; }
+    } catch (error) { authError.innerText = "Erro na autenticação."; }
 }
-       
-// Event listener para ativar modo admin (clique no título)
-titulo.addEventListener("click", () => {
-    abrirModalAuth();
-});
 
-// Funções do modal de pontos
+titulo.addEventListener("click", () => abrirModalAuth());
+
 window.adicionar = function(id) {
     if (!modoAdmin) return;
-    
     participanteAtual = id;
     const participante = participantes.find(p => p.id == id);
     document.getElementById("modal-nome").innerText = participante.nome;
-    
-    // Limpar seleção anterior
-    document.querySelectorAll('.criterio-item').forEach(item => {
-        item.classList.remove('selecionado');
-    });
-    
+    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
     window.criterioSelecionado = null;
-    
     modalPontos.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
 }
 
-window.fecharModalPontos = () => {
-    modalPontos.classList.add("hidden");
-    document.body.style.overflow = 'auto';
-}
+window.fecharModalPontos = () => { modalPontos.classList.add("hidden"); document.body.style.overflow = 'auto'; }
 
 window.confirmarPontos = async function() {
-    if (!window.criterioSelecionado) {
-        alert("Selecione um critério!");
-        return;
-    }
-    
+    if (!window.criterioSelecionado) { alert("Selecione um critério!"); return; }
     const criterio = criterios.find(c => c.id === window.criterioSelecionado);
     if (!criterio) return;
-    
     try {
         await addDoc(collection(db, "transacoes"), {
             participante_id: participanteAtual,
@@ -829,56 +781,78 @@ window.confirmarPontos = async function() {
             nome_criterio: criterio.nome,
             data: new Date().toISOString()
         });
-        
         fecharModalPontos();
-    } catch (error) {
-        console.error("Erro ao salvar:", error);
-        alert("Erro ao salvar pontos. Tente novamente.");
-    }
+    } catch (error) { alert("Erro ao salvar pontos."); }
 }
 
-// Função para renderizar ranking
+// ZERAR TODOS OS PONTOS (remove todas transações)
+window.resetarPontos = async function() {
+    if (!modoAdmin) return;
+    const confirmar = confirm("ATENÇÃO: Isso irá ZERAR a pontuação de TODOS os alunos. Essa ação não pode ser desfeita. Deseja continuar?");
+    if (!confirmar) return;
+    try {
+        const snapshot = await getDoc(doc(db, "config", "admin")); // apenas verifica admin
+        const transacoesSnapshot = await getDoc(doc(db, "transacoes")); // não funciona assim, vamos deletar docs
+        const querySnapshot = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({ getDocs, query, collection }) => getDocs(query(collection(db, "transacoes"))));
+        const batch = writeBatch(db);
+        querySnapshot.forEach((doc) => { batch.delete(doc.ref); });
+        await batch.commit();
+        // Registrar evento de reset no histórico (opcional)
+        await addDoc(collection(db, "transacoes"), {
+            participante_id: 0,
+            valor: 0,
+            criterio: "reset_global",
+            nome_criterio: "SISTEMA: Todos os pontos zerados",
+            data: new Date().toISOString()
+        });
+        alert("Todos os pontos foram zerados com sucesso!");
+    } catch (error) { console.error(error); alert("Erro ao resetar pontos. Tente novamente."); }
+}
+
+// Exibir Histórico completo
+window.mostrarHistorico = function() {
+    if (!modoAdmin) return;
+    if (transacoes.length === 0) {
+        historicoLista.innerHTML = '<div class="empty-history">Nenhuma movimentação registrada ainda.</div>';
+    } else {
+        const historicoOrdenado = [...transacoes].reverse();
+        historicoLista.innerHTML = historicoOrdenado.map(t => {
+            const participante = participantes.find(p => p.id === t.participante_id);
+            const nomeParticipante = participante ? participante.nome : (t.participante_id === 0 ? "SISTEMA" : "Desconhecido");
+            const dataFormatada = t.data ? new Date(t.data).toLocaleString('pt-BR') : "Data não registrada";
+            const detalhe = t.criterio === "reset_global" ? " RESET GERAL DE PONTOS" : ` +${t.valor} pts (${t.nome_criterio || t.criterio})`;
+            return `<div class="historico-item"><strong>${nomeParticipante}</strong> — ${detalhe}<div class="historico-data"> ${dataFormatada}</div></div>`;
+        }).join('');
+    }
+    modalHistorico.classList.remove("hidden");
+    document.body.style.overflow = 'hidden';
+}
+
+window.fecharModalHistorico = () => { modalHistorico.classList.add("hidden"); document.body.style.overflow = 'auto'; }
+
 function render() {
-    // Calcular pontos totais para cada participante
     const ranking = participantes.map(p => {
-        const soma = transacoes
-            .filter(t => t.participante_id === p.id)
-            .reduce((acc, t) => acc + t.valor, 0);
+        const soma = transacoes.filter(t => t.participante_id === p.id && t.criterio !== "reset_global").reduce((acc, t) => acc + t.valor, 0);
         return { ...p, pontos: soma };
     }).sort((a, b) => b.pontos - a.pontos);
-
     rankingDiv.innerHTML = ranking.map((p, i) => `
         <div class="card rank-${i} ${modoAdmin ? 'admin-clickable' : ''}" 
              onclick="${modoAdmin ? `adicionar(${p.id})` : ''}"
              style="animation-delay: ${0.1 + i * 0.05}s">
-            <div class="rank-info">
-                <span class="pos">${i + 1}º</span>
-                <span class="name">${p.nome}</span>
-            </div>
+            <div class="rank-info"><span class="pos">${i + 1}º</span><span class="name">${p.nome}</span></div>
             <strong class="points">${p.pontos}</strong>
         </div>
     `).join("");
 }
 
-// Listener em tempo real do Firestore
 onSnapshot(collection(db, "transacoes"), (snapshot) => {
-    transacoes = snapshot.docs.map(doc => {
-        const data = doc.data();
-        // Garantir compatibilidade com dados antigos
-        if (!data.criterio) {
-            data.criterio = 'geral';
-            data.nome_criterio = 'Geral';
-        }
-        return data;
-    });
+    transacoes = snapshot.docs.map(doc => doc.data());
     render();
-}, (error) => {
-    console.error("Erro no listener:", error);
-    rankingDiv.innerHTML = '<div style="text-align: center; color: var(--accent-red); padding: 40px;">Erro ao carregar dados. Verifique conexão.</div>';
-});
+}, (error) => { rankingDiv.innerHTML = '<div style="text-align:center;color:var(--accent-red);">Erro ao carregar dados.</div>'; });
 
-// Render inicial
+document.getElementById("btn-resetar")?.addEventListener("click", resetarPontos);
+document.getElementById("btn-historico")?.addEventListener("click", mostrarHistorico);
 render();
 </script>
 </body>
-</html
+</html>
