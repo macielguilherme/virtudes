@@ -197,25 +197,8 @@
         .criterio-item:hover { border-color: var(--accent-red); transform: translateY(-2px); background: rgba(239, 68, 68, 0.1); }
         .criterio-item.selecionado { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
         .criterio-nome { font-weight: 700; font-size: 0.9rem; margin-bottom: 5px; color: var(--text-primary); }
-        .criterio-pontos { font-weight: 800; font-size: 1.4rem; color: var(--accent-red); }
+        .criterio-pontos { font-weight: 800; font-size: 1.2rem; color: var(--accent-red); }
         
-        .valor-destaque {
-            text-align: center;
-            background: rgba(239,68,68,0.1);
-            border-radius: 20px;
-            padding: 12px;
-            margin: 10px 0 5px 0;
-            font-size: 1.1rem;
-            font-weight: 500;
-            border: 1px dashed var(--accent-red);
-        }
-        .valor-destaque span {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--accent-red);
-            margin-left: 10px;
-        }
-
         .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .btn-primary { background: white; color: black; border: none; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition-smooth); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(255,255,255,0.3); }
@@ -356,7 +339,7 @@
     <div id="ranking" class="ranking-list"></div>
 
     <div class="tabela-criterios">
-        <h3>Criterios de Pontuacao - 1 Semestre</h3>
+        <h3>Criterios de Pontuacao - 2° Semestre</h3>
         <div class="tabela-grid">
             <div class="tabela-item"><span class="tabela-nome">Quiz</span><span class="tabela-valor">5 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Pergunta Biblica (criar)</span><span class="tabela-valor">20 pts</span></div>
@@ -383,9 +366,6 @@
         <h3 id="modal-nome">Nome do Aluno</h3>
         <h4>Selecione o criterio</h4>
         <div class="criterios-grid" id="criteriosGrid"></div>
-        <div id="valor-dinamico" class="valor-destaque" style="display: none;">
-            Valor desta acao: <span id="pontos-selecionados">0</span> pts
-        </div>
         <div class="modal-actions">
             <button class="btn-secondary" onclick="fecharModalPontos()">Cancelar</button>
             <button class="btn-primary" onclick="confirmarPontos()">Salvar</button>
@@ -449,8 +429,6 @@ const senha1 = document.getElementById('senha1');
 const authError = document.getElementById('auth-error');
 const criteriosGrid = document.getElementById('criteriosGrid');
 const adminButtonsDiv = document.getElementById('admin-buttons-container');
-const valorDinamicoDiv = document.getElementById('valor-dinamico');
-const pontosSelecionadosSpan = document.getElementById('pontos-selecionados');
 
 function preencherCriteriosGrid() {
     criteriosGrid.innerHTML = criterios.map(crit => `
@@ -467,9 +445,6 @@ window.selecionarCriterio = function(criterioId) {
     const elemento = document.querySelector(`[data-criterio="${criterioId}"]`);
     if (elemento) {
         elemento.classList.add('selecionado');
-        const pontos = parseInt(elemento.getAttribute('data-pontos'));
-        pontosSelecionadosSpan.innerText = pontos;
-        valorDinamicoDiv.style.display = 'block';
     }
     window.criterioSelecionado = criterioId;
 }
@@ -516,7 +491,6 @@ window.adicionar = function(id) {
     const participante = participantes.find(p => p.id == id);
     document.getElementById("modal-nome").innerText = participante.nome;
     document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
-    valorDinamicoDiv.style.display = 'none';
     window.criterioSelecionado = null;
     modalPontos.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
