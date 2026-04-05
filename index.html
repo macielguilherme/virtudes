@@ -169,40 +169,74 @@
         .modal.hidden { opacity: 0; pointer-events: none; }
         .modal-content {
             background: var(--bg-secondary); border: 1px solid var(--border-light); width: 90%; max-width: 500px;
-            border-radius: 32px; padding: 40px 30px; transform: scale(1); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 32px; padding: 30px 25px; transform: scale(1); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
         }
         .modal.hidden .modal-content { transform: scale(0.9); }
-        .modal-content h3 { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(to right, #fff, #a3a3a3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .modal-content h4 { text-align: center; color: var(--text-secondary); font-weight: 400; margin-bottom: 25px; font-size: 0.9rem; }
-        .modal-content input { width: 100%; padding: 18px; border-radius: 16px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); color: white; text-align: center; font-size: 1.2rem; font-weight: 500; outline: none; transition: 0.3s; margin-bottom: 15px; }
-        .modal-content input:focus { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.05); }
-        .error-message { color: var(--accent-red); font-size: 0.85rem; text-align: center; margin: 10px 0; min-height: 20px; }
-
+        .modal-content h3 { text-align: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; background: linear-gradient(to right, #fff, #a3a3a3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-content h4 { text-align: center; color: var(--text-secondary); font-weight: 400; margin-bottom: 20px; font-size: 0.85rem; }
+        
         .criterios-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0 10px 0;
+            gap: 10px;
+            margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
         }
         .criterio-item {
             background: var(--glass-bg);
             border: 1px solid var(--border-light);
-            border-radius: 16px;
-            padding: 15px 10px;
+            border-radius: 14px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
         .criterio-item:hover { border-color: var(--accent-red); transform: translateY(-2px); background: rgba(239, 68, 68, 0.1); }
         .criterio-item.selecionado { border-color: var(--accent-red); background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-        .criterio-nome { font-weight: 700; font-size: 0.9rem; margin-bottom: 5px; color: var(--text-primary); }
-        .criterio-pontos { font-weight: 800; font-size: 1.2rem; color: var(--accent-red); }
-        
-        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .btn-primary { background: white; color: black; border: none; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition-smooth); }
+        .criterio-nome { font-weight: 600; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-primary); }
+        .criterio-pontos { font-weight: 800; font-size: 1rem; color: var(--accent-red); }
+
+        .input-group {
+            margin: 15px 0;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border-light);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        .input-group input[type="number"] {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        .input-group textarea {
+            resize: vertical;
+            font-size: 0.9rem;
+        }
+
+        .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .btn-primary { background: white; color: black; border: none; padding: 14px; border-radius: 16px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: var(--transition-smooth); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(255,255,255,0.3); }
-        .btn-secondary { background: transparent; color: white; border: 1px solid var(--border-light); padding: 16px; border-radius: 16px; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: transparent; color: white; border: 1px solid var(--border-light); padding: 14px; border-radius: 16px; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); }
         .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: var(--text-secondary); }
 
         .admin-panel-buttons {
@@ -228,49 +262,36 @@
         .admin-action-btn:hover { background: var(--accent-red); color: white; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
         .reset-btn { border-color: #ff4444; color: #ff8888; }
         .reset-btn:hover { background: #ff4444; color: white; }
-        .history-btn { border-color: #3b82f6; color: #60a5fa; }
-        .history-btn:hover { background: #3b82f6; color: white; }
 
-        .historico-lista {
-            max-height: 400px;
-            overflow-y: auto;
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .historico-item {
-            background: rgba(255,255,255,0.03);
-            border-left: 3px solid var(--accent-red);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-        }
-        .historico-item strong { color: var(--accent-red); }
-        .historico-data { font-size: 0.7rem; color: var(--text-secondary); margin-top: 6px; }
-        .empty-history { text-align: center; color: var(--text-secondary); padding: 30px; font-style: italic; }
-
-        .help-btn {
+        .help-btn, .history-fab {
             position: fixed;
             bottom: 20px;
-            right: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: var(--accent-red);
             color: white;
             border: none;
             font-size: 24px;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             transition: var(--transition-smooth);
             z-index: 800;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .help-btn:hover { transform: scale(1.1); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5); }
+        .help-btn {
+            right: 20px;
+            background: var(--accent-red);
+        }
+        .history-fab {
+            right: 85px;
+            background: #3b82f6;
+            font-size: 22px;
+            text-decoration: none;
+        }
+        .help-btn:hover, .history-fab:hover { transform: scale(1.1); }
 
         .admin-status {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -294,6 +315,17 @@
         .tabela-nome { font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; }
         .tabela-valor { font-weight: 800; color: var(--accent-red); font-size: 1.2rem; }
 
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(25px); }
             to { opacity: 1; transform: translateY(0); }
@@ -302,26 +334,23 @@
             .card { padding: 16px 20px; border-radius: 20px; }
             .name { font-size: 1rem; }
             .points { font-size: 1.1rem; padding: 6px 12px; }
-            .pos { min-width: 30px; }
             .criterios-grid { grid-template-columns: 1fr; }
-            .modal-content { padding: 30px 20px; }
-            .tabela-grid { grid-template-columns: 1fr; }
-            .tabela-item { padding: 12px 15px; }
+            .history-fab { right: 80px; }
         }
     </style>
 </head>
 <body>
 <header class="m3-header">
     <input type="checkbox" id="menu-toggle">
-    <a href="#" class="brand-logo">CONNECTION 70x7</a>
+    <a href="index.html" class="brand-logo">CONNECTION 70x7</a>
     <label for="menu-toggle" class="menu-icon-label">
         <div class="line"></div><div class="line"></div><div class="line"></div>
     </label>
     <label for="menu-toggle" class="menu-overlay"></label>
     <nav class="main-menu">
-        <a href="#">Inicio</a>
+        <a href="index.html">Inicio</a>
         <a href="#" style="color: var(--accent-red);">Ranking da EBD</a>
-        <a href="#">Programacao</a>
+        <a href="historico.html">Historico</a>
     </nav>
 </header>
 
@@ -332,7 +361,6 @@
     </div>
 
     <div id="admin-buttons-container" class="admin-panel-buttons" style="display: none;">
-        <button class="admin-action-btn history-btn" id="btn-historico">HISTORICO DE PONTOS</button>
         <button class="admin-action-btn reset-btn" id="btn-resetar">ZERAR TODOS OS PONTOS</button>
     </div>
 
@@ -342,38 +370,48 @@
         <h3>Criterios de Pontuacao - 2 Semestre</h3>
         <div class="tabela-grid">
             <div class="tabela-item"><span class="tabela-nome">Quiz</span><span class="tabela-valor">5 pts</span></div>
-            <div class="tabela-item"><span class="tabela-nome">Pergunta Biblica (criar)</span><span class="tabela-valor">20 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Pergunta Biblica</span><span class="tabela-valor">20 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Convidar nao crente</span><span class="tabela-valor">50 pts</span></div>
-            <div class="tabela-item"><span class="tabela-nome">Cultos (segunda/quinta)</span><span class="tabela-valor">15 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Cultos</span><span class="tabela-valor">15 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Oracao domingo</span><span class="tabela-valor">10 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Ligacao no grupo</span><span class="tabela-valor">5 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Nao ter atraso</span><span class="tabela-valor">1 pt</span></div>
             <div class="tabela-item"><span class="tabela-nome">Professor na EBD</span><span class="tabela-valor">50 pts</span></div>
-            <div class="tabela-item"><span class="tabela-nome">Dirigir/pregar culto jovem</span><span class="tabela-valor">100 pts</span></div>
-            <div class="tabela-item"><span class="tabela-nome">Perguntas da licao EBD</span><span class="tabela-valor">10 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Dirigir culto</span><span class="tabela-valor">100 pts</span></div>
+            <div class="tabela-item"><span class="tabela-nome">Perguntas licao</span><span class="tabela-valor">10 pts</span></div>
             <div class="tabela-item"><span class="tabela-nome">Devocional do Dia</span><span class="tabela-valor">5 pts</span></div>
         </div>
     </div>
 </div>
 
+<a href="historico.html" class="history-fab" title="Ver Historico">📊</a>
 <button class="help-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})">?</button>
 <div id="admin-indicator" class="admin-status">MODO ADMIN ATIVO</div>
 
 <div id="modal-auth" class="modal hidden"><div class="modal-content"><h3>Acesso Admin</h3><input type="password" id="senha1" placeholder="Digite sua senha"><div id="auth-error" class="error-message"></div><div class="modal-actions"><button class="btn-secondary" onclick="fecharModalAuth()">Cancelar</button><button class="btn-primary" onclick="processarAuth()">Continuar</button></div></div></div>
 
-<div id="modal-pontos" class="modal modal-pontos hidden">
+<div id="modal-pontos" class="modal hidden">
     <div class="modal-content">
         <h3 id="modal-nome">Nome do Aluno</h3>
-        <h4>Selecione o criterio</h4>
+        <h4>Selecione um criterio (opcional)</h4>
         <div class="criterios-grid" id="criteriosGrid"></div>
+        
+        <div class="input-group">
+            <label>Pontos *</label>
+            <input type="number" id="pontos-input" placeholder="Digite os pontos" value="" step="1">
+        </div>
+        
+        <div class="input-group">
+            <label>Observacao (opcional)</label>
+            <textarea id="observacao-input" rows="2" placeholder="Ex: Participou do quiz..."></textarea>
+        </div>
+        
         <div class="modal-actions">
             <button class="btn-secondary" onclick="fecharModalPontos()">Cancelar</button>
-            <button class="btn-primary" onclick="confirmarPontos()">Salvar</button>
+            <button class="btn-primary" id="btn-confirmar-pontos">Confirmar</button>
         </div>
     </div>
 </div>
-
-<div id="modal-historico" class="modal hidden"><div class="modal-content"><h3>HISTORICO DE PONTUACOES</h3><div id="historico-lista" class="historico-lista"></div><div class="modal-actions"><button class="btn-primary" onclick="fecharModalHistorico()">Fechar</button></div></div></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -399,14 +437,13 @@ const criterios = [
     { id: 'quiz', nome: 'Quiz', pontos: 5 },
     { id: 'pergunta_biblica', nome: 'Pergunta Biblica', pontos: 20 },
     { id: 'convidado', nome: 'Convidar nao crente', pontos: 50 },
-    { id: 'culto_segunda', nome: 'Culto Segunda', pontos: 15 },
-    { id: 'culto_quinta', nome: 'Culto Quinta', pontos: 15 },
+    { id: 'culto', nome: 'Cultos', pontos: 15 },
     { id: 'oracao_domingo', nome: 'Oracao Domingo', pontos: 10 },
     { id: 'ligacao_grupo', nome: 'Ligacao no grupo', pontos: 5 },
     { id: 'sem_atraso', nome: 'Nao ter atraso', pontos: 1 },
     { id: 'professor_ebd', nome: 'Professor na EBD', pontos: 50 },
-    { id: 'dirigir_culto', nome: 'Dirigir/pregar culto', pontos: 100 },
-    { id: 'pergunta_licao', nome: 'Perguntas da licao', pontos: 10 },
+    { id: 'dirigir_culto', nome: 'Dirigir culto', pontos: 100 },
+    { id: 'pergunta_licao', nome: 'Perguntas licao', pontos: 10 },
     { id: 'devocional_dia', nome: 'Devocional do Dia', pontos: 5 }
 ];
 
@@ -423,31 +460,39 @@ const titulo = document.getElementById("titulo");
 const indicator = document.getElementById("admin-indicator");
 const modalAuth = document.getElementById('modal-auth');
 const modalPontos = document.getElementById('modal-pontos');
-const modalHistorico = document.getElementById('modal-historico');
-const historicoLista = document.getElementById('historico-lista');
 const senha1 = document.getElementById('senha1');
 const authError = document.getElementById('auth-error');
 const criteriosGrid = document.getElementById('criteriosGrid');
 const adminButtonsDiv = document.getElementById('admin-buttons-container');
+const pontosInput = document.getElementById('pontos-input');
+const observacaoInput = document.getElementById('observacao-input');
+const btnConfirmar = document.getElementById('btn-confirmar-pontos');
+
+let currentSelectedCriterio = null;
 
 function preencherCriteriosGrid() {
     criteriosGrid.innerHTML = criterios.map(crit => `
-        <div class="criterio-item" onclick="selecionarCriterio('${crit.id}')" data-criterio="${crit.id}" data-pontos="${crit.pontos}">
+        <div class="criterio-item" data-criterio="${crit.id}" data-pontos="${crit.pontos}">
             <div class="criterio-nome">${crit.nome}</div>
             <div class="criterio-pontos">+${crit.pontos}</div>
         </div>
     `).join('');
+    
+    document.querySelectorAll('.criterio-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.criterio-item').forEach(i => i.classList.remove('selecionado'));
+            item.classList.add('selecionado');
+            const pontos = parseInt(item.dataset.pontos);
+            pontosInput.value = pontos;
+            currentSelectedCriterio = {
+                id: item.dataset.criterio,
+                nome: item.querySelector('.criterio-nome').innerText,
+                pontos: pontos
+            };
+        });
+    });
 }
 preencherCriteriosGrid();
-
-window.selecionarCriterio = function(criterioId) {
-    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
-    const elemento = document.querySelector(`[data-criterio="${criterioId}"]`);
-    if (elemento) {
-        elemento.classList.add('selecionado');
-    }
-    window.criterioSelecionado = criterioId;
-}
 
 async function hashSenha(senha) {
     const encoder = new TextEncoder();
@@ -490,29 +535,57 @@ window.adicionar = function(id) {
     participanteAtual = id;
     const participante = participantes.find(p => p.id == id);
     document.getElementById("modal-nome").innerText = participante.nome;
-    document.querySelectorAll('.criterio-item').forEach(item => item.classList.remove('selecionado'));
-    window.criterioSelecionado = null;
+    
+    document.querySelectorAll('.criterio-item').forEach(i => i.classList.remove('selecionado'));
+    pontosInput.value = '';
+    observacaoInput.value = '';
+    currentSelectedCriterio = null;
+    
     modalPontos.classList.remove("hidden");
     document.body.style.overflow = 'hidden';
 }
 
 window.fecharModalPontos = () => { modalPontos.classList.add("hidden"); document.body.style.overflow = 'auto'; }
 
-window.confirmarPontos = async function() {
-    if (!window.criterioSelecionado) { alert("Selecione um criterio!"); return; }
-    const criterio = criterios.find(c => c.id === window.criterioSelecionado);
-    if (!criterio) return;
+async function salvarPontos() {
+    const valor = parseInt(pontosInput.value);
+    if (isNaN(valor) || valor <= 0) {
+        alert("Digite um valor de pontos valido (maior que zero)!");
+        return;
+    }
+    
+    const participante = participantes.find(p => p.id === participanteAtual);
+    const confirmMsg = `Adicionar ${valor} ponto(s) para ${participante.nome}?`;
+    if (!confirm(confirmMsg)) return;
+    
+    btnConfirmar.disabled = true;
+    btnConfirmar.innerHTML = 'Salvando <span class="loading-spinner"></span>';
+    
     try {
-        await addDoc(collection(db, "transacoes"), {
+        const dados = {
             participante_id: participanteAtual,
-            valor: criterio.pontos,
-            criterio: criterio.id,
-            nome_criterio: criterio.nome,
-            data: new Date().toISOString()
-        });
+            valor: valor,
+            data: new Date().toISOString(),
+            observacao: observacaoInput.value.trim() || null
+        };
+        
+        if (currentSelectedCriterio) {
+            dados.criterio = currentSelectedCriterio.id;
+            dados.nome_criterio = currentSelectedCriterio.nome;
+        }
+        
+        await addDoc(collection(db, "transacoes"), dados);
         fecharModalPontos();
-    } catch (error) { alert("Erro ao salvar pontos."); }
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao salvar pontos. Tente novamente.");
+    } finally {
+        btnConfirmar.disabled = false;
+        btnConfirmar.innerHTML = 'Confirmar';
+    }
 }
+
+btnConfirmar.addEventListener('click', salvarPontos);
 
 window.resetarPontos = async function() {
     if (!modoAdmin) return;
@@ -532,30 +605,8 @@ window.resetarPontos = async function() {
             data: new Date().toISOString()
         });
         alert("Todos os pontos foram zerados com sucesso!");
-    } catch (error) { console.error(error); alert("Erro ao resetar pontos. Tente novamente."); }
+    } catch (error) { console.error(error); alert("Erro ao resetar pontos."); }
 }
-
-window.mostrarHistorico = function() {
-    if (!modoAdmin) return;
-    if (transacoes.length === 0) {
-        historicoLista.innerHTML = '<div class="empty-history">Nenhuma movimentacao registrada ainda.</div>';
-    } else {
-        const historicoOrdenado = [...transacoes].reverse();
-        historicoLista.innerHTML = historicoOrdenado.map(t => {
-            const participante = participantes.find(p => p.id === t.participante_id);
-            const nomeParticipante = participante ? participante.nome : (t.participante_id === 0 ? "SISTEMA" : "Desconhecido");
-            const dataFormatada = t.data ? new Date(t.data).toLocaleString('pt-BR') : "Data nao registrada";
-            let detalhe = "";
-            if (t.criterio === "reset_global") detalhe = "RESET GERAL DE PONTOS";
-            else detalhe = `+${t.valor} pts (${t.nome_criterio || t.criterio})`;
-            return `<div class="historico-item"><strong>${nomeParticipante}</strong> — ${detalhe}<div class="historico-data">Data: ${dataFormatada}</div></div>`;
-        }).join('');
-    }
-    modalHistorico.classList.remove("hidden");
-    document.body.style.overflow = 'hidden';
-}
-
-window.fecharModalHistorico = () => { modalHistorico.classList.add("hidden"); document.body.style.overflow = 'auto'; }
 
 function render() {
     const ranking = participantes.map(p => {
@@ -578,7 +629,6 @@ onSnapshot(collection(db, "transacoes"), (snapshot) => {
 }, (error) => { rankingDiv.innerHTML = '<div style="text-align:center;color:var(--accent-red);">Erro ao carregar dados.</div>'; });
 
 document.getElementById("btn-resetar")?.addEventListener("click", resetarPontos);
-document.getElementById("btn-historico")?.addEventListener("click", mostrarHistorico);
 render();
 </script>
 </body>
