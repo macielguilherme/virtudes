@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Historico | Connection 70x7</title>
+<title>Histórico | Connection 70x7</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
         * {
             margin: 0;
@@ -33,13 +34,13 @@
             padding-bottom: 80px;
         }
 
-        .m3-header {
+        .header {
             background-color: rgba(5, 5, 5, 0.85);
             backdrop-filter: blur(20px);
             height: 70px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             padding: 0 6%;
             border-bottom: 1px solid var(--border-light);
             position: fixed;
@@ -48,25 +49,21 @@
             z-index: 1000;
         }
 
-        .brand-logo {
+        .logo {
             font-size: 1.3rem;
             font-weight: 800;
             letter-spacing: -1px;
             text-decoration: none;
             color: var(--text-primary);
-            text-align: center;
         }
 
-        .nav-links {
-            position: static;
+        .nav-menu {
             display: flex;
             gap: 30px;
-            background: transparent;
-            padding: 0;
-            flex-direction: row;
-            margin-left: auto;
+            align-items: center;
         }
-        .nav-links a {
+
+        .nav-menu a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 12px;
@@ -74,12 +71,21 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .nav-links a:hover {
+
+        .nav-menu a:hover {
             color: var(--accent-red);
         }
-        .nav-links a.active {
+
+        .nav-menu a.active {
             color: var(--accent-red);
+        }
+        
+        .nav-menu a .material-icons {
+            font-size: 16px;
         }
 
         .container {
@@ -98,6 +104,10 @@
             background: linear-gradient(to right, #fff, #a3a3a3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .page-header p {
             font-size: 0.75rem;
@@ -138,6 +148,12 @@
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--accent-red);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .participante-nome .material-icons {
+            font-size: 18px;
         }
         .pontos-valor {
             font-weight: 800;
@@ -150,6 +166,12 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .criterio-info .material-icons {
+            font-size: 14px;
         }
         .observacao-info {
             font-size: 0.85rem;
@@ -159,12 +181,26 @@
             border-radius: 12px;
             margin-top: 8px;
             border-left: 2px solid var(--accent-red);
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .observacao-info .material-icons {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
         .data-info {
             font-size: 0.7rem;
             color: var(--text-secondary);
             margin-top: 10px;
             text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+        .data-info .material-icons {
+            font-size: 12px;
         }
         .empty-history {
             text-align: center;
@@ -185,7 +221,6 @@
             background: var(--accent-red);
             color: white;
             border: none;
-            font-size: 20px;
             cursor: pointer;
             box-shadow: 0 5px 20px rgba(239,68,68,0.3);
             transition: var(--transition-smooth);
@@ -195,6 +230,9 @@
             justify-content: center;
             text-decoration: none;
         }
+        .back-btn .material-icons {
+            font-size: 24px;
+        }
         .back-btn:hover { transform: scale(1.1); }
 
         @keyframes fadeInUp {
@@ -203,31 +241,32 @@
         }
         @media (max-width: 600px) {
             .historico-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .nav-links { gap: 15px; }
-            .nav-links a { font-size: 10px; letter-spacing: 1px; }
+            .nav-menu { gap: 15px; }
+            .nav-menu a { font-size: 10px; letter-spacing: 1px; }
+            .logo { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-<header class="m3-header">
-    <a href="index.html" class="brand-logo">CONNECTION 70x7</a>
-    <div class="nav-links">
-        <a href="index.html">Ranking</a>
-        <a href="historico.html" class="active">Histórico</a>
+<header class="header">
+    <a href="index.html" class="logo">CONNECTION 70x7</a>
+    <div class="nav-menu">
+        <a href="index.html"><span class="material-icons">emoji_events</span> RANKING</a>
+        <a href="historico.html" class="active"><span class="material-icons">history</span> HISTÓRICO</a>
     </div>
 </header>
 
 <div class="container">
     <div class="page-header">
-        <h1>Histórico de Pontuações</h1>
-        <p>Todas as movimentacoes</p>
+        <h1><span class="material-icons">history</span> Histórico de Pontuações</h1>
+        <p>Todas as movimentações registradas</p>
     </div>
     <div id="historico-container" class="historico-lista">
-        <div class="empty-history">Carregando historico...</div>
+        <div class="empty-history">Carregando histórico...</div>
     </div>
 </div>
 
-<a href="index.html" class="back-btn" title="Voltar">←</a>
+<a href="index.html" class="back-btn" title="Voltar"><span class="material-icons">arrow_back</span></a>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -246,9 +285,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const participantes = [
-    {id: 1, nome: 'Ester'}, {id: 2, nome: 'Isabelle'}, {id: 3, nome: 'Flavia'},
-    {id: 4, nome: 'Julia'}, {id: 5, nome: 'Geovana'}, {id: 6, nome: 'Joao'},
-    {id: 7, nome: 'Pedro'}, {id: 8, nome: 'Moises'}, {id: 9, nome: 'Miguel'},
+    {id: 1, nome: 'Ester'}, {id: 2, nome: 'Isabelle'}, {id: 3, nome: 'Flávia'},
+    {id: 4, nome: 'Júlia'}, {id: 5, nome: 'Geovana'}, {id: 6, nome: 'João'},
+    {id: 7, nome: 'Pedro'}, {id: 8, nome: 'Moisés'}, {id: 9, nome: 'Miguel'},
     {id: 10, nome: 'Mariana'}, {id: 11, nome: 'Mateus'}, {id: 12, nome: 'Davi'},
     {id: 13, nome: 'Guilherme'}
 ];
@@ -256,7 +295,7 @@ const participantes = [
 const container = document.getElementById('historico-container');
 
 function formatarData(dataISO) {
-    if (!dataISO) return 'Data nao registrada';
+    if (!dataISO) return 'Data não registrada';
     const data = new Date(dataISO);
     return data.toLocaleString('pt-BR', {
         day: '2-digit', month: '2-digit', year: 'numeric',
@@ -272,32 +311,32 @@ function getNomeParticipante(id) {
 
 function renderHistorico(transacoes) {
     if (!transacoes || transacoes.length === 0) {
-        container.innerHTML = '<div class="empty-history">Nenhuma movimentacao registrada</div>';
+        container.innerHTML = '<div class="empty-history">Nenhuma movimentação registrada</div>';
         return;
     }
     
     const filtered = transacoes.filter(t => t.criterio !== 'reset_global');
     if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty-history">Nenhuma movimentacao registrada</div>';
+        container.innerHTML = '<div class="empty-history">Nenhuma movimentação registrada</div>';
         return;
     }
     
     container.innerHTML = filtered.map((t, index) => {
         const nome = getNomeParticipante(t.participante_id);
         const valor = t.valor || 0;
-        const criterioTexto = t.nome_criterio ? `Criterio: ${t.nome_criterio}` : '';
-        const observacaoTexto = t.observacao ? `Observacao: ${t.observacao}` : '';
+        const criterioTexto = t.nome_criterio ? `Critério: ${t.nome_criterio}` : '';
+        const observacaoTexto = t.observacao ? t.observacao : '';
         const dataFormatada = formatarData(t.data);
         
         return `
             <div class="historico-card" style="animation-delay: ${0.05 * index}s">
                 <div class="historico-header">
-                    <span class="participante-nome">${nome}</span>
+                    <span class="participante-nome"><span class="material-icons">person</span> ${nome}</span>
                     <span class="pontos-valor">+${valor} pts</span>
                 </div>
-                ${criterioTexto ? `<div class="criterio-info"> ${criterioTexto}</div>` : ''}
-                ${observacaoTexto ? `<div class="observacao-info"> ${observacaoTexto}</div>` : ''}
-                <div class="data-info"> ${dataFormatada}</div>
+                ${criterioTexto ? `<div class="criterio-info"><span class="material-icons">sell</span> ${criterioTexto}</div>` : ''}
+                ${observacaoTexto ? `<div class="observacao-info"><span class="material-icons">comment</span> ${observacaoTexto}</div>` : ''}
+                <div class="data-info"><span class="material-icons">schedule</span> ${dataFormatada}</div>
             </div>
         `;
     }).join('');
@@ -309,7 +348,7 @@ onSnapshot(q, (snapshot) => {
     renderHistorico(transacoes);
 }, (error) => {
     console.error(error);
-    container.innerHTML = '<div class="empty-history">Erro ao carregar historico. Verifique sua conexao.</div>';
+    container.innerHTML = '<div class="empty-history">Erro ao carregar histórico. Verifique sua conexão.</div>';
 });
 </script>
 </body>
